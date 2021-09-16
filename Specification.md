@@ -1,6 +1,7 @@
 TEAM 12 - Milestone 1 
 
 Use case #1 in Time Management
+
 Product name: Study to Success
 Non-functional Requirements:
 Use case name: Creat time blocks

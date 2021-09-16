@@ -1,3 +1,5 @@
+TEAM 12 - Milestone 1 
+
 Use case #1 in Time Management
 Product name: Study to Success
 Non-functional Requirements:
@@ -14,4 +16,3 @@ Primary Sequence:
 6 USers log out
 Post conditions:
 Users had an event in their calendar
-

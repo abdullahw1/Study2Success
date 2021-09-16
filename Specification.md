@@ -2,11 +2,17 @@ TEAM 12 - Milestone 1
 
 
 https://github.com/HoaTNNguyen/CMPE131-Study-to-Success
+
 Group member:
+
 Hoa Nguyen: https://github.com/HoaTNNguyen
+
 Ngan Ngo: https://github.com/RachelNgo
+
 Jerusalem Ilag: https://github.com/jeruilag
+
 Abdullah Waheed: https://github.com/abdullahw1
+
 Product name: Study to Success
 
 

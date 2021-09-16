@@ -56,7 +56,7 @@ Use case name: Use pomodoro timer
 
 Actors: The Users
 
-Preconditions: 
+Preconditions: The Users has logged in. 
 
 Trigger: the users open the "Pomodoro timer"
 
@@ -74,3 +74,32 @@ The Users would focus on a single task at a time.
 
 Alternate sequence:
 
+USE CASE #4
+
+Product name: Study to Success
+
+Problem Statement: feature which users could organize and manage their to-do items 
+
+Non-functional Requirements:
+
+Use case name: Add todo tracker
+
+Actors: The Users
+
+Preconditions: The Users has logged in.
+
+Triggers: The Users select "ToDo Tracker " option
+
+Primary sequence:
+
+ 1. System prompt the users to do a list.
+
+ 2. The users make a list, sort them according to their priority.
+
+ 3. System show the list with the checklist.
+
+ 4. The Users log out.
+
+Postconditions:
+
+The Users can add, delete and mark the todo list.

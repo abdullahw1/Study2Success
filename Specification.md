@@ -1,7 +1,14 @@
-============================================================
 TEAM 12 - Milestone 1 
 
-Use case #1 in Time Management
+
+
+
+
+============================================================
+
+
+
+Time Management - Use case #1
 
 Product name: Study to Success
 

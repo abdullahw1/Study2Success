@@ -1,2 +1,2 @@
-# CMPE131-Study-to-Success
+Study2Success
 team 12

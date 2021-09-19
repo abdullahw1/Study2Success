@@ -23,12 +23,12 @@
       - [2. Use pomodoro timer](#2-use-pomodoro-timer)
       - [3. Add todo tracker](#3-add-todo-tracker)
 
-## Description:
+## Description
 - Date: TBD
 - Product Name: [Study2Success](https://github.com/HoaTNNguyen/Study2Success)
 - Problem Statement: TBD
 
-## Contributors:
+## Contributors
 1. Hoa Nguyen: https://github.com/HoaTNNguyen
 2. Ngan Ngo: https://github.com/RachelNgo
 3. Jerusalem Ilag: https://github.com/jeruilag

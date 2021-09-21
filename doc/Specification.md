@@ -52,15 +52,15 @@
 - Summary: User is able to input a markdown file and turn it into flashcards
 - Actors: User
 - Preconditions: 
-  i. User is already logged in
-  ii. User is in Flashcards tab
-  iii. User has a markdown file
+  1. User is already logged in
+  2. User is in Flashcards tab
+  3. User has a markdown file
 - Triggers: User presses import button
 - Primary Sequence:
-  i. The app pops up a small window waiting for user to select a markdown file
-  ii. User select a markdown file from their computer
-  iii. The app creates folders of flashcards according to #tag names in the markdown file
-  iv. The app shows new folders
+  1. The app pops up a small window waiting for user to select a markdown file
+  2. User select a markdown file from their computer
+  3. The app creates folders of flashcards according to #tag names in the markdown file
+  4. The app shows new folders
 - Postconditions: Folders of flashcards are created from a markdown file
 
 #### 2. Share flash cards (add to their account)
@@ -68,17 +68,17 @@
 - Summary: User is able to share their flashcards with other users whom the users already added in their account
 - Actors: User, other user
 - Preconditions:
-  i. User is already logged in
-  ii. User is in Flashcards tab
-  iii. User has other users in his/her friend list
-  iv. User has flashcards
+  1. User is already logged in
+  2. User is in Flashcards tab
+  3. User has other users in his/her friend list
+  4. User has flashcards
 - Triggers: User presses share button
 - Primary Sequence:
-  i. The app shows a drop down list of friends
-  ii. User selects friends that he/she wants to share with
-  iii. User presses share
-  iv. The app send notification to the users who get shared
-  v. The app let user know that the flashcards has been shared
+  1. The app shows a drop down list of friends
+  2. User selects friends that he/she wants to share with
+  3. User presses share
+  4. The app send notification to the users who get shared
+  5. The app let user know that the flashcards has been shared
 - Postconditions: The flashcards are shared and added to other users' repository
 
 #### 3. Mind map of flash cards
@@ -86,15 +86,15 @@
 - Summary: User is able to mind map their flashcards
 - Actors: User
 - Preconditions:
-  i. User is already logged in
-  ii. User is in Flashcards tab
-  iii. User has Flashcards
+  1. User is already logged in
+  2. User is in Flashcards tab
+  3. User has Flashcards
 - Triggers: User presses Create Mindmap button
 - Primary Sequence:
-  i. The app asks user to select a Mindmap pattern
-  ii. User selects a Mindmap pattern
-  iii. User selects Flashcards to add it in a position in the pattern
-  iv. User presses done button
+  1. The app asks user to select a Mindmap pattern
+  2. User selects a Mindmap pattern
+  3. User selects Flashcards to add it in a position in the pattern
+  4. User presses done button
 - Postconditions: A Mindmap of Flashcards is created
 
 #### 4. Change order of flash cards based on how often user got answer correct
@@ -102,14 +102,14 @@
 - Summary: The app changes order of Flashcards based on how often user got anser correct whenever the user open a Flashcard folder
 - Actors: User
 - Preconditions:
-  i. User is logged in
-  ii. User has Flashcards
-  iii. User is in a Flashcards folder
-  iv. User answer at least one Flashcard
+  1. User is logged in
+  2. User has Flashcards
+  3. User is in a Flashcards folder
+  4. User answer at least one Flashcard
 - Triggers: User opens a Flashcard folder
 - Primary Sequence:
-  i. The app keeps track the number of time the user got answer correct for a Flashcard
-  ii. The app sorts the order of Flashcards based on the number of time the user got answer correct increasingly (Flashcard that is answered less correct will be appeared on the top)
+  1. The app keeps track the number of time the user got answer correct for a Flashcard
+  2. The app sorts the order of Flashcards based on the number of time the user got answer correct increasingly (Flashcard that is answered less correct will be appeared on the top)
 - Postconditions: The order of Flashcared is sorted based on how often user got answer correct
 
 #### 5. Create pdf of flash cards to print

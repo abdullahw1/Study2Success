@@ -1,8 +1,9 @@
 # Product Specifications
 
 - [Product Specifications](#product-specifications)
-  - [Description:](#description)
-  - [Contributors:](#contributors)
+  - [Description](#description)
+  - [Contributors](#contributors)
+  - [Non-functional Requirements](#non-functional-requirements)
   - [Functional Requirements](#functional-requirements)
     - [General Feature](#general-feature)
     - [Memorizing](#memorizing)
@@ -24,7 +25,7 @@
       - [3. Add todo tracker](#3-add-todo-tracker)
 
 ## Description
-- Date: TBD
+- Date: 09/21/2021
 - Product Name: [Study2Success](https://github.com/HoaTNNguyen/Study2Success)
 - Problem Statement: TBD
 
@@ -34,6 +35,11 @@
 3. Jerusalem Ilag: https://github.com/jeruilag
 4. Abdullah Waheed: https://github.com/abdullahw1
 
+## Non-functional Requirements
+1. Password has to be at least 8 characters and 1 number.
+2. The app should render a note under 1KB within 1 second in all systems.
+3. The app is able to render its layout to different screen sizes (laptop, ipad, phone).
+   
 ## Functional Requirements
 
 ### General Feature
@@ -43,39 +49,68 @@
 ### Memorizing
 #### 1. Input a markdown file and ouput flash cards
 - DRI: [@Hoa Nguyen](https://github.com/HoaTNNguyen)
-- Summary:
-- Actors
-- Preconditions:
-- Triggers:
+- Summary: User is able to input a markdown file and turn it into flashcards
+- Actors: User
+- Preconditions: 
+  i. User is already logged in
+  ii. User is in Flashcards tab
+  iii. User has a markdown file
+- Triggers: User presses import button
 - Primary Sequence:
-- Postconditions:
+  i. The app pops up a small window waiting for user to select a markdown file
+  ii. User select a markdown file from their computer
+  iii. The app creates folders of flashcards according to #tag names in the markdown file
+  iv. The app shows new folders
+- Postconditions: Folders of flashcards are created from a markdown file
 
 #### 2. Share flash cards (add to their account)
 - DRI: [@Hoa Nguyen](https://github.com/HoaTNNguyen)
-- Summary:
-- Actors
+- Summary: User is able to share their flashcards with other users whom the users already added in their account
+- Actors: User, other user
 - Preconditions:
-- Triggers:
+  i. User is already logged in
+  ii. User is in Flashcards tab
+  iii. User has other users in his/her friend list
+  iv. User has flashcards
+- Triggers: User presses share button
 - Primary Sequence:
-- Postconditions:
+  i. The app shows a drop down list of friends
+  ii. User selects friends that he/she wants to share with
+  iii. User presses share
+  iv. The app send notification to the users who get shared
+  v. The app let user know that the flashcards has been shared
+- Postconditions: The flashcards are shared and added to other users' repository
 
 #### 3. Mind map of flash cards
 - DRI: [@Hoa Nguyen](https://github.com/HoaTNNguyen)
-- Summary:
-- Actors
+- Summary: User is able to mind map their flashcards
+- Actors: User
 - Preconditions:
-- Triggers:
+  i. User is already logged in
+  ii. User is in Flashcards tab
+  iii. User has Flashcards
+- Triggers: User presses Create Mindmap button
 - Primary Sequence:
-- Postconditions:
+  i. The app asks user to select a Mindmap pattern
+  ii. User selects a Mindmap pattern
+  iii. User selects Flashcards to add it in a position in the pattern
+  iv. User presses done button
+- Postconditions: A Mindmap of Flashcards is created
 
 #### 4. Change order of flash cards based on how often user got answer correct
 - DRI: [@Hoa Nguyen](https://github.com/HoaTNNguyen)
-- Summary:
-- Actors
+- Summary: The app changes order of Flashcards based on how often user got anser correct whenever the user open a Flashcard folder
+- Actors: User
 - Preconditions:
-- Triggers:
+  i. User is logged in
+  ii. User has Flashcards
+  iii. User is in a Flashcards folder
+  iv. User answer at least one Flashcard
+- Triggers: User opens a Flashcard folder
 - Primary Sequence:
-- Postconditions:
+  i. The app keeps track the number of time the user got answer correct for a Flashcard
+  ii. The app sorts the order of Flashcards based on the number of time the user got answer correct increasingly (Flashcard that is answered less correct will be appeared on the top)
+- Postconditions: The order of Flashcared is sorted based on how often user got answer correct
 
 #### 5. Create pdf of flash cards to print
 - DRI: [@Jerusalem Ilag](https://github.com/jeruilag)

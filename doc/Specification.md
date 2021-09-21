@@ -135,7 +135,7 @@
 	2. User must select what the type of note they want to select.
 	3. User edits the markdown note file 
 	4. The file is saved
-- Postconditions:
+- Postconditions: User is presented with the rendered markdown notes.
 
 #### 2. Convert markdown notes to pdf
 - DRI: [@Abdullah Waheed](https://github.com/abdullahw1)
@@ -150,7 +150,7 @@
 	1. User is given an options to choose which markdown note they want converted to pdf
 	2. User inputs option
 	3. Pdf gets saved
-- Post conditions:
+- Post conditions: The users notes are converted to pdf form.
 
 #### 3. Share notes with other people (add to their account)
 - DRI: [@Abdullah Waheed](https://github.com/abdullahw1)
@@ -175,7 +175,9 @@
 	2. User has note files 
 - Triggers: User searches key text in search menu
 - Primary Sequence:
-- Postconditions:
+	1. User selects search option  
+	2. User enters keywords
+- Postconditions: User is presented with notes containing searched keywords.
 
 #### 5. Quickly rename files using regular expression
 - DRI: [@Jerusalem Ilag](https://github.com/jeruilag)

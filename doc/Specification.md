@@ -190,12 +190,18 @@
 
 #### 6. Add ability to navigate between notes using this syntax [[this other note]]
 - DRI: [@Jerusalem Ilag](https://github.com/jeruilag)
-- Summary:
-- Actors
+- Summary: Add ability to navigate between notes using this syntax [[this other note]]
+- Actors: User
 - Preconditions:
-- Triggers:
+          i. User is logged in
+         ii. User is in one of their notes
+        iii. User has multple notes
+- Triggers: User types in [[name of other note]]
 - Primary Sequence:
+        i. User types in [[name of other note]]
 - Postconditions:
+        i. User is now viewing their other note.
+
 
 ### Time Management
 #### 1.  Create time blocks

@@ -229,7 +229,7 @@
 - Summary: Feature which users could organize and manage their to-do items 
 - Actors: User
 - Preconditions: The Users has logged in.
-- Triggers: The Users select "ToDo Tracker " option
+- Triggers: The Users select "To Do Tracker " option
 - Primary sequence:
    1. System prompt the users to do a list.
    2. The users make a list, sort them according to their priority.

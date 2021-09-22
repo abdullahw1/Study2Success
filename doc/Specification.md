@@ -187,12 +187,17 @@
 
 #### 5. Quickly rename files using regular expression
 - DRI: [@Jerusalem Ilag](https://github.com/jeruilag)
-- Summary:
-- Actors
+- Summary: Quickly rename files using regular expressions
+- Actors: User
 - Preconditions:
-- Triggers:
+	 i. User is logged in
+	ii. User has a file
+- Triggers: User clicks "Rename file"
 - Primary Sequence:
+	 i. User inputs the name they want the file to be called
+	ii. User presses "Confirm"
 - Postconditions:
+	i. File now has the new name given by the user
 
 #### 6. Add ability to navigate between notes using this syntax [[this other note]]
 - DRI: [@Jerusalem Ilag](https://github.com/jeruilag)

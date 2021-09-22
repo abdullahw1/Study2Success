@@ -114,12 +114,18 @@
 
 #### 5. Create pdf of flash cards to print
 - DRI: [@Jerusalem Ilag](https://github.com/jeruilag)
-- Summary:
-- Actors
+- Summary: Create a pdf of flash cards to print
+- Actors: User
 - Preconditions:
-- Triggers:
+	  i. User is already logged in
+	 ii. User is in the Flashcards tab
+	iii. User has notes
+- Triggers: User clicks "Convert to PDF"
 - Primary Sequence:
-- Postconditions:
+	  i. A window of directories pops up
+	 ii. User selects where they want to save it to
+	iii. User selects "Confirm"
+- Postconditions: The flashcards are saved in .pdf format in the proper location
 
 ### Notes
 #### 1. Render markdown notes
@@ -242,3 +248,16 @@
    3. System show the list with the checklist.
    4. The Users log out.
 - Postconditions: The Users can add, delete and mark the todo list.
+
+#### 4. Track hours worked per day
+- DRI: [@Jerusalem Ilag](https://github.com/jeruilag)
+- Summary: User can see how long they have been studying flash cards for
+- Actors: User
+- Preconditions:
+         i. User is already logged in
+        ii. User has flash cards
+- Triggers: User clicks "How long have I been studying?"
+- Primary Sequence:
+         i. User clicks the button
+        ii. A time will be displayed with how long the user has had flash cards open for
+- Postconditions: User will know how long they have been studying for that day

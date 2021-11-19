@@ -5,11 +5,11 @@ from flask_login import UserMixin
 from myapp import login 
 
 class User(UserMixin, db.Model):
-   
     id = db.Column(db.Integer, primary_key = True)
     email = db.Column(db.String(128), unique = True)
     username = db.Column(db.String(64), unique = True)
     password = db.Column(db.String(64))
+    flashcards = db.relationship('FlashCard', backref = 'user' , lazy = 'dynamic')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -23,3 +23,13 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+class FlashCard(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    front = db.Column(db.Text)
+    back = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'<FlashCard {self.id}: {self.front}, {self.back}>'
+

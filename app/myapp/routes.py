@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-from myapp import myapp_obj
-from myapp.forms import SignupForm, LoginForm, FlashCardForm, LearnFlashCardForm
 from flask import render_template, flash, redirect, url_for, request
-=======
->>>>>>> ada58c1d47b4e857ad0d9c5bee7918ae22fa13a6
 from werkzeug.security import generate_password_hash
-from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 
 from myapp import myapp_obj
@@ -72,7 +66,7 @@ def add_flashcard():
         return redirect(url_for("add_flashcard"))
     return render_template("/add-flashcard.html", form = form)
 
-previous_cards = []
+
 
 @myapp_obj.route("/my-flashcard")
 @login_required
@@ -83,7 +77,6 @@ def show_flashcard():
         flash("You don't have any flashcards. Please create one")
         return redirect(url_for("add_flashcard"))
     return render_template("my-flashcard.html", ordered_cards = ordered_cards)
-
 
     
     

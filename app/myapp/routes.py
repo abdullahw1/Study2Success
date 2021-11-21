@@ -1,11 +1,11 @@
+from werkzeug.security import generate_password_hash
+from flask import render_template, flash, redirect, url_for, request
+from flask_login import current_user, login_user, logout_user, login_required
+
 from myapp import myapp_obj
 from myapp.forms import SignupForm, LoginForm, FlashCardForm
-from flask import render_template, flash, redirect, url_for, request
-from werkzeug.security import generate_password_hash
-
 from myapp import db
 from myapp.models import User, FlashCard
-from flask_login import current_user, login_user, logout_user, login_required
 
 @myapp_obj.route("/")
 def home():

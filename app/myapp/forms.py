@@ -3,6 +3,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired, Email, EqualTo
 from wtforms import ValidationError
+
 from myapp.models import User
 
 

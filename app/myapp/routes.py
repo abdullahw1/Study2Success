@@ -1,11 +1,17 @@
+<<<<<<< HEAD
 from myapp import myapp_obj
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, LearnFlashCardForm
 from flask import render_template, flash, redirect, url_for, request
+=======
+>>>>>>> ada58c1d47b4e857ad0d9c5bee7918ae22fa13a6
 from werkzeug.security import generate_password_hash
+from flask import render_template, flash, redirect, url_for, request
+from flask_login import current_user, login_user, logout_user, login_required
 
+from myapp import myapp_obj
+from myapp.forms import SignupForm, LoginForm, FlashCardForm
 from myapp import db
 from myapp.models import User, FlashCard
-from flask_login import current_user, login_user, logout_user, login_required
 
 @myapp_obj.route("/")
 def home():
@@ -78,23 +84,6 @@ def show_flashcard():
         return redirect(url_for("add_flashcard"))
     return render_template("my-flashcard.html", ordered_cards = ordered_cards)
 
-# @myapp_obj.route("/learn-flashcard", methods=['GET', 'POST'])
-# @login_required
-# def learn_flashcard():
-#     if 
-#     form = LearnFlashCardForm()
-#     cards = FlashCard.query.filter_by(user_id=current_user.get_id()).all()
-#     if cards is None:
-#         flash("You don't have any flashcards. Please create one")
-#         return redirect(url_for("add_flashcard"))
-#     else:
-
-#     # else:
-#     #     for card in cards:
-#     #         form = LearnFlashCardForm()
-#     #         # if form.validate_on_submit():
-#     #     return redirect("/learn-flashcard")
-#     return render_template("learn-flashcard.html", form=form, cards=cards)
 
     
     

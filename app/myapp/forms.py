@@ -3,6 +3,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired, Email, EqualTo
 from wtforms import ValidationError
+
 from myapp.models import User
 
 
@@ -31,3 +32,6 @@ class FlashCardForm(FlaskForm):
     front = TextAreaField('Front', validators = [DataRequired()])
     back = TextAreaField('Back', validators = [DataRequired()])
     add = SubmitField('Add')
+
+class NextButton(FlaskForm):
+    nextCard = SubmitField('Next')

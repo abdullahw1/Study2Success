@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-{% for card in ordered_cards %}
+{% for card in cards %}
 <p> {{ card.front}} <br>
     {{ card.back}} </p>
+<p>{{ form.learned.label }}
+    {{ form.learned() }}</p>
 {% endfor %}
-<a href="add-flashcard">Create</a>
-<a href="/learn-flashcard">Learn</a>
 {% endblock %}

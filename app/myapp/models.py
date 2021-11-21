@@ -1,8 +1,8 @@
-from myapp import db
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from flask_login import UserMixin
+
 from myapp import login 
+from myapp import db
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -25,11 +25,17 @@ def load_user(id):
     return User.query.get(int(id))
 
 class FlashCard(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     front = db.Column(db.Text)
     back = db.Column(db.Text)
+    learned = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return f'<FlashCard {self.id}: {self.front}, {self.back}>'
 
+# class CardProgress(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     progress = db.Column(db.Text)
+#     index = db.Column(db.Integer)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

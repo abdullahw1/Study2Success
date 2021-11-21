@@ -31,3 +31,6 @@ class FlashCardForm(FlaskForm):
     front = TextAreaField('Front', validators = [DataRequired()])
     back = TextAreaField('Back', validators = [DataRequired()])
     add = SubmitField('Add')
+
+class NextButton(FlaskForm):
+    nextCard = SubmitField('Next')

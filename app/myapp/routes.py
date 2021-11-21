@@ -1,5 +1,5 @@
 from myapp import myapp_obj
-from myapp.forms import SignupForm, LoginForm, FlashCardForm
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, LearnFlashCardForm
 from flask import render_template, flash, redirect, url_for, request
 from werkzeug.security import generate_password_hash
 
@@ -59,9 +59,42 @@ def logout():
 def add_flashcard():
     form = FlashCardForm()
     if form.validate_on_submit():
-        card = FlashCard(front = form.front.data, back = form.back.data, user = current_user._get_current_object())
+        card = FlashCard(front=form.front.data, back=form.back.data, learned=0, user = current_user._get_current_object())
         db.session.add(card)
         db.session.commit()
         flash("Flashcard has been created")
         return redirect(url_for("add_flashcard"))
     return render_template("/add-flashcard.html", form = form)
+
+previous_cards = []
+
+@myapp_obj.route("/my-flashcard")
+@login_required
+def show_flashcard():
+    # cards = FlashCard.query.filter_by(user_id = current_user.get_id()).all()
+    ordered_cards = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned).all()
+    if ordered_cards is None:
+        flash("You don't have any flashcards. Please create one")
+        return redirect(url_for("add_flashcard"))
+    return render_template("my-flashcard.html", ordered_cards = ordered_cards)
+
+# @myapp_obj.route("/learn-flashcard", methods=['GET', 'POST'])
+# @login_required
+# def learn_flashcard():
+#     if 
+#     form = LearnFlashCardForm()
+#     cards = FlashCard.query.filter_by(user_id=current_user.get_id()).all()
+#     if cards is None:
+#         flash("You don't have any flashcards. Please create one")
+#         return redirect(url_for("add_flashcard"))
+#     else:
+
+#     # else:
+#     #     for card in cards:
+#     #         form = LearnFlashCardForm()
+#     #         # if form.validate_on_submit():
+#     #     return redirect("/learn-flashcard")
+#     return render_template("learn-flashcard.html", form=form, cards=cards)
+
+    
+    

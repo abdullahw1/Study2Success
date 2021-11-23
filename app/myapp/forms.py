@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired, Email, EqualTo
 from wtforms import ValidationError
@@ -35,3 +35,8 @@ class FlashCardForm(FlaskForm):
 
 class NextButton(FlaskForm):
     nextCard = SubmitField('Next')
+
+
+class UploadMarkdownForm(FlaskForm):
+    file = FileField('Select markdown file:', validators=[FileRequired(), FileAllowed(['md'])])
+    upload = SubmitField('Upload')

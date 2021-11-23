@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 {% for card in ordered_cards %}
-<p> {{ card.front}} <br>
+<p> <b>{{ card.front}}</b> <br>
     {{ card.back}} </p>
 {% endfor %}
 <a href="add-flashcard">Create</a>
+<a href='import-flashcard'>Import</a>
 <a href="/learn-flashcard">Learn</a>
 {% endblock %}

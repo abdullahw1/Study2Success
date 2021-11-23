@@ -3,9 +3,10 @@ from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
 from myapp import myapp_obj
-from myapp.forms import SignupForm, LoginForm, FlashCardForm
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm
 from myapp import db
 from myapp.models import User, FlashCard
+from myapp.mdparser import md2flashcard
 
 @myapp_obj.route("/")
 def home():
@@ -78,5 +79,19 @@ def show_flashcard():
         return redirect(url_for("add_flashcard"))
     return render_template("my-flashcard.html", ordered_cards = ordered_cards)
 
-    
-    
+
+@myapp_obj.route("/import-flashcard", methods=['GET', 'POST'])
+@login_required
+def import_flashcard():
+    form = UploadMarkdownForm()
+    if form.validate_on_submit():
+        f = form.file.data
+        content = f.stream.read().decode('ascii')
+        for section, flashcards in md2flashcard(content).items(): # TODO: Save flashcard by section
+            for flashcard in flashcards:
+                card = FlashCard(front=flashcard.front, back=flashcard.back, learned=0, user=current_user._get_current_object())
+                db.session.add(card)
+        db.session.commit()
+        flash(f'Uploaded file {f.filename} into flashcards')
+        return redirect(url_for("show_flashcard"))
+    return render_template("import-flashcard.html", form=form)

@@ -39,7 +39,7 @@ Recommended to read the below carefully before contributing to this project. Fee
     .
     ├── docs                # Documentation (E.g. Markdown documentations)
     |   └── images          # Images needed for the documentation
-    └── src                 # Source code for applications
+    └── app                 # Source code for applications
 
 ### Github flow
 When making changes, please create a branch to work on it and file a PR to merge the changes. This really prevents

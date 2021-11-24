@@ -65,3 +65,7 @@ def add_flashcard():
         flash("Flashcard has been created")
         return redirect(url_for("add_flashcard"))
     return render_template("/add-flashcard.html", form = form)
+
+@myapp_obj.route("/pomodoro")
+def pomodoro():
+    return render_template("/pomodoro.html")

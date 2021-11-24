@@ -67,8 +67,10 @@ def add_flashcard():
         return redirect(url_for("add_flashcard"))
     return render_template("/add-flashcard.html", form = form)
 
-
-
+#Pomodoro app
+@myapp_obj.route("/pomodoro")
+def tomato():
+    return render_template("/pomodoro.html")
 
 @myapp_obj.route("/my-flashcard")
 @login_required
@@ -97,8 +99,5 @@ def import_flashcard():
         return redirect(url_for("show_flashcard"))
     return render_template("import-flashcard.html", form=form)
 
-#Pomodoro app
-@myapp_obj.route("/pomodoro")
-def tomato():
-    return render_template("/pomodoro.html")
+
 

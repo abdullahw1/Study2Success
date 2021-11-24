@@ -94,4 +94,7 @@ def import_flashcard():
         db.session.commit()
         flash(f'Uploaded file {f.filename} into flashcards')
         return redirect(url_for("show_flashcard"))
-    return render_template("import-flashcard.html", form=form)
+    return render_template("import-flashcard.html", form=form)@myapp_obj.route("/pomodoro")
+def tomato():
+    return render_template("/pomodoro.html")
+

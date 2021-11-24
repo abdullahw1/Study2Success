@@ -69,6 +69,7 @@ def add_flashcard():
 
 
 
+
 @myapp_obj.route("/my-flashcard")
 @login_required
 def show_flashcard():
@@ -94,7 +95,10 @@ def import_flashcard():
         db.session.commit()
         flash(f'Uploaded file {f.filename} into flashcards')
         return redirect(url_for("show_flashcard"))
-    return render_template("import-flashcard.html", form=form)@myapp_obj.route("/pomodoro")
+    return render_template("import-flashcard.html", form=form)
+
+#Pomodoro app
+@myapp_obj.route("/pomodoro")
 def tomato():
     return render_template("/pomodoro.html")
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
@@ -155,6 +156,11 @@ def add_friend_userid_provided(user_id):
         db.session.commit()
         flash(f'Sent friend request to "{user.username}"')
     return redirect(url_for("show_friends"))
+
+#Pomodoro app
+@myapp_obj.route("/pomodoro")
+def tomato():
+    return render_template("/pomodoro.html")
 
 
 @myapp_obj.errorhandler(404)

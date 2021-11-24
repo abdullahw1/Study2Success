@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<p>
+    Friends:
+    <ul>
+        {% for friend, status in friends %}
+            <li>User:{{ friend.username }}, Status:{{ status.name }}</li>
+        {% endfor %}
+    </ul>
+</p>
+<a href="/add-friend">Add Friend</a>
+{% endblock %}

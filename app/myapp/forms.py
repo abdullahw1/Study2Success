@@ -15,22 +15,22 @@ class SignupForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_email(self, field):
-        if User.query.filter_by(email = field.data).first():
+        if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered')
 
     def validate_username(self, field):
-        if User.query.filter_by(username = field.data).first():
+        if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use')
 
 class LoginForm(FlaskForm):
-    username = StringField('USERNAME', validators = [DataRequired()])
+    username = StringField('USERNAME', validators=[DataRequired()])
     password = PasswordField('PASSWORD')
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Sign in')
 
 class FlashCardForm(FlaskForm):
-    front = TextAreaField('Front', validators = [DataRequired()])
-    back = TextAreaField('Back', validators = [DataRequired()])
+    front = TextAreaField('Front', validators=[DataRequired()])
+    back = TextAreaField('Back', validators=[DataRequired()])
     add = SubmitField('Add')
 
 class NextButton(FlaskForm):
@@ -40,3 +40,8 @@ class NextButton(FlaskForm):
 class UploadMarkdownForm(FlaskForm):
     file = FileField('Select markdown file:', validators=[FileRequired(), FileAllowed(['md'])])
     upload = SubmitField('Upload')
+
+
+class SearchForm(FlaskForm):
+    text = StringField('Text', validators=[DataRequired()])
+    button = SubmitField('Search')

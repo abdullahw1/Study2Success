@@ -41,7 +41,7 @@ function timerStart() {
         clearInterval(secondsInterval);
         // Alert message
         document.getElementById("done").innerHTML =
-          " Time Up!! Please Take a Break";
+          " Time Up!! Take a Break";
         // Display message
         document.getElementById("done").classList.add("show_message");
       }

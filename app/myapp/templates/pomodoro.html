@@ -9,9 +9,12 @@
       rel="stylesheet"
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous">
+      <script src="https://kit.fontawesome.com/996973c893.js"></script>
+      <script src="{{url_for('static',filename='main.js')}}"></script>
+      <script src="{{url_for('static',filename='images/img.jpg')}}"></script>
     <title>Pomodoro</title>
   </head>
-  <body onload="template()">
+  <body onload="timerTemplate()">
     <div class="container">
       <h1 class="text-center my-5 heading">Pomodoro</h1>
       <div class="container timer">
@@ -31,10 +34,10 @@
         <h3 id="done" class="text-center"></h3>
       </div>
       <div class="conatiner d-flex justify-content-center my-5">
-        <button class="btn" onclick="start_timer()">
+        <button class="btn" onclick="timerStart()">
           <i class="fas fa-play fa-2x"></i>
         </button>
-        <a href="pomodoro.html"><i class="fas fa-redo-alt fa-2x"></i></a>
+        <a href="pomodoro"><i class="fas fa-redo-alt fa-2x"></i></a>
       </div>
     </div>
     <!-- JavaScript Bundle with Popper -->

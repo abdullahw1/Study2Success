@@ -2,11 +2,12 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, a
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
-from myapp import myapp_obj, db
+from myapp import myapp_obj, db, nav
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm
 from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo
 from myapp.models import get_friend_status
 from myapp.mdparser import md2flashcard
+
 
 @myapp_obj.route("/")
 def home():
@@ -69,7 +70,7 @@ def add_flashcard():
     return render_template("/add-flashcard.html", form=form)
 
 
-@myapp_obj.route("/my-flashcard")
+@myapp_obj.route("/my-flashcards")
 @login_required
 def show_flashcard():
     # cards = FlashCard.query.filter_by(user_id = current_user.get_id()).all()
@@ -77,7 +78,7 @@ def show_flashcard():
     if ordered_cards is None:
         flash("You don't have any flashcards. Please create one")
         return redirect(url_for("add_flashcard"))
-    return render_template("my-flashcard.html", ordered_cards=ordered_cards)
+    return render_template("my-flashcards.html", ordered_cards=ordered_cards)
 
 
 @myapp_obj.route("/import-flashcard", methods=['GET', 'POST'])
@@ -95,6 +96,14 @@ def import_flashcard():
         flash(f'Uploaded file {f.filename} into flashcards')
         return redirect(url_for("show_flashcard"))
     return render_template("import-flashcard.html", form=form)
+
+
+@myapp_obj.route("/learn-flashcard", methods=['GET', 'POST'])
+@login_required
+def learn_flashcard():
+    # Not implemented yet, redirect back
+    return redirect(url_for("show_flashcard"))
+
 
 # Friends
 @myapp_obj.route("/my-friends", methods=['GET', 'POST'])

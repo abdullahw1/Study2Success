@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>My FlashCards</h1>
+{% for card in ordered_cards %}
+<p> <b>{{ card.front}}</b> <br>
+    {{ card.back}} </p>
+{% endfor %}
+<a class="btn btn-outline-primary" href="add-flashcard">Create</a>
+<a class="btn btn-outline-primary" href='import-flashcard'>Import</a>
+<a class="btn btn-outline-primary" href="learn-flashcard">Learn</a>
+{% endblock %}

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<h1>My FlashCards</h1>
 {% for card in ordered_cards %}
 <p> <b>{{ card.front}}</b> <br>
     {{ card.back}} </p>

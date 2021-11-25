@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="POST" novalidate>
+    {{ search_form.hidden_tag()}}
+    <p>
+        {{ search_form.text }}
+        {{ search_form.button() }}
+    </p>
+    <p>
+        <ul>
+            {% for username, buttons in found_users %}
+                <li>
+                    {{ username }}
+                    {% for href, tag_descrp in buttons %}
+                        <a href="{{ href }}">{{ tag_descrp }}</a>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+    </p>
+</form>
+<a href="/my-friends">Back</a>
+{% endblock %}

@@ -1,15 +1,28 @@
+import enum
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 from myapp import login, db
 
 
+class FriendStatusEnum(enum.Enum):
+    PENDING = 0
+    FRIEND = 1
+
+class Friend(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user1_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user2_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    status = db.Column(db.Enum(FriendStatusEnum))
+
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(128), unique = True)
-    username = db.Column(db.String(64), unique = True)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(128), unique=True)
+    username = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(64))
-    flashcards = db.relationship('FlashCard', backref = 'user' , lazy = 'dynamic')
+    flashcards = db.relationship('FlashCard', backref='user' , lazy='dynamic')
+    friend1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
+    friend2 = db.relationship('Friend', backref='user2' , lazy='dynamic', foreign_keys=[Friend.user2_id])
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -39,9 +52,31 @@ class FlashCard(db.Model):
     def __repr__(self):
         return f'<FlashCard {self.id}: {self.front}, {self.back}>'
 
+
 # class CardProgress(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     progress = db.Column(db.Text)
 #     index = db.Column(db.Integer)
 #     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+def get_friend_status(current_user_id, other_user_id):
+    # Get and Check if has pending friend request or already a friend
+    friend_record = db.session.query(Friend)\
+                    .filter(((Friend.user1_id == current_user_id) & (Friend.user2_id == other_user_id))\
+                            | ((Friend.user2_id == current_user_id) & (Friend.user1_id == other_user_id))
+                    ).one_or_none()
+    # If found friend record
+    if friend_record:
+        if friend_record.status == FriendStatusEnum.FRIEND:
+            status = 'friend'
+        elif friend_record.status == FriendStatusEnum.PENDING:
+            if friend_record.user1.id == int(current_user_id): # Current user sent the request
+                status = 'pending-sent-request'
+            else: # The other user sent the request, current user needs to approve
+                status = 'pending-to-approve'
+        else:
+            raise Exception(f"Unknown status {friend_record.status}")
+    else:
+        # No record, not friend/pending, neutral
+        status = 'neutral'
+    return status, friend_record

@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        {% if title %}
-        <title>{{title}}</title>
+<head>
+    {% if title %}
+    <title>{{title}}</title>
+    {% else %}
+    <title>S2S</title>
+    {% endif %}
+</head>
+
+<body>
+    <div>
+        <a href="/">Home</a> <br>
+        {% if current_user.is_authenticated %}
+        <a href="/logout">Log out</a> <br>
+        <a href="/my-flashcard">FlashCard</a> <br>
+        <a href="/my-friends">Friends</a> <br>
+        <a href="/pomodoro">Pomodoro</a> <br>
+        <a href="/todo">ToDo Tracker</a> <br>
         {% else %}
-        <title>S2S</title>
+        <a href="/signup">Sign up</a> <br>
+        <a href="/login"> Log In</a> <br>
         {% endif %}
-    </head>
-
-    <body>
-        <div>
-            {% if current_user.is_authenticated %}
-            <a href="/logout">Log out</a>
-            <a href="/pomodoro">Pomodoro</a>
-            <a href="/todo">ToDo Tracker</a>
-            
-            {% else %}
-            <a href="/signup">Sign up</a> <br>
-            <a href="/login"> Log In</a><br>
-            {% endif %}
-        </div>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for m in messages %}
-            <li>{{ m }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-        {% block content %}
-        {% endblock %}
-    </body>
-
-</html>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for m in messages %}
+        <li>{{ m }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}
+    {% endblock %}
+</body>

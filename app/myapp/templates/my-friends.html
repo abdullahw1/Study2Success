@@ -8,11 +8,11 @@
             <li>
                 User:{{ friend.username }}, Status:{{ status.name }}
                 {% for href, tag_descrp in buttons %}
-                    <a href="{{ href }}">{{ tag_descrp }}</a>
+                    <a class="btn btn-outline-primary" href="{{ href }}">{{ tag_descrp }}</a>
                 {% endfor %}
             </li>
         {% endfor %}
     </ul>
 </p>
-<a href="/add-friend">Add Friend</a>
+<a class="btn btn-outline-primary" href="/add-friend">Add Friend</a>
 {% endblock %}

@@ -13,12 +13,12 @@
                 <li>
                     {{ username }}
                     {% for href, tag_descrp in buttons %}
-                        <a href="{{ href }}">{{ tag_descrp }}</a>
+                        <a class="btn btn-outline-primary" href="{{ href }}">{{ tag_descrp }}</a>
                     {% endfor %}
                 </li>
             {% endfor %}
         </ul>
     </p>
 </form>
-<a href="/my-friends">Back</a>
+<a class="btn btn-outline-primary" href="/my-friends">Back</a>
 {% endblock %}

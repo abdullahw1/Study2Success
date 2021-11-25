@@ -2,9 +2,10 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, a
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
-from myapp import myapp_obj, db
+from myapp import myapp_obj
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm
-from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo
+from myapp import db
+from myapp.models import User, FlashCard, Friend, FriendStatusEnum
 from myapp.models import get_friend_status
 from myapp.mdparser import md2flashcard
 
@@ -55,7 +56,6 @@ def logout():
     logout_user()
     return redirect(url_for("home"))
 
-# Flashcards
 @myapp_obj.route("/add-flashcard", methods=['GET', 'POST'])
 @login_required
 def add_flashcard():
@@ -67,6 +67,7 @@ def add_flashcard():
         flash("Flashcard has been created")
         return redirect(url_for("add_flashcard"))
     return render_template("/add-flashcard.html", form=form)
+
 
 
 @myapp_obj.route("/my-flashcard")
@@ -96,7 +97,7 @@ def import_flashcard():
         return redirect(url_for("show_flashcard"))
     return render_template("import-flashcard.html", form=form)
 
-# Friends
+
 @myapp_obj.route("/my-friends", methods=['GET', 'POST'])
 @login_required
 def show_friends():
@@ -209,33 +210,6 @@ def remove_friend_userid_provided(user_id):
 def tomato():
     return render_template("/pomodoro.html")
 
-# Todo app
-@myapp_obj.route("/todo")
-def myTodo():
-    todo_list = Todo.query.all()
-    return render_template("todo.html", todo_list=todo_list)
-
-@myapp_obj.route("/addTodo", methods=["POST"])
-def addTodo():
-    title = request.form.get("title")
-    new_todo = Todo(title=title, complete=False)
-    db.session.add(new_todo)
-    db.session.commit()
-    return redirect(url_for("myTodo"))
-
-@myapp_obj.route("/updateTodo/<int:todo_id>")
-def updateTodo(todo_id):
-    todo = Todo.query.filter_by(id=todo_id).first()
-    todo.complete = not todo.complete
-    db.session.commit()
-    return redirect(url_for("myTodo"))
-
-@myapp_obj.route("/deleteTodo/<int:todo_id>")
-def deleteTodo(todo_id):
-    todo = Todo.query.filter_by(id=todo_id).first()
-    db.session.delete(todo)
-    db.session.commit()
-    return redirect(url_for("myTodo"))
 
 @myapp_obj.errorhandler(404)
 def page_not_found(e):

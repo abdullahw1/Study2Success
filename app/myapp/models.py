@@ -2,8 +2,8 @@ import enum
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-from myapp import login 
-from myapp import db
+from myapp import login, db
+
 
 class FriendStatusEnum(enum.Enum):
     PENDING = 0
@@ -32,6 +32,11 @@ class User(UserMixin, db.Model):
     
     def __repr__(self):
         return f'<User {self.id}: {self.username}, {self.password}>'
+
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100))
+    complete = db.Column(db.Boolean)
 
 @login.user_loader
 def load_user(id):

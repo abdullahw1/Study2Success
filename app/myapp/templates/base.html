@@ -16,11 +16,12 @@
         <a href="/logout">Log out</a> <br>
         <a href="/my-flashcard">FlashCard</a> <br>
         <a href="/my-friends">Friends</a> <br>
+        <a href="/pomodoro">Pomodoro</a> <br>
+        <a href="/todo">ToDo Tracker</a> <br>
         {% else %}
         <a href="/signup">Sign up</a> <br>
         <a href="/login"> Log In</a> <br>
         {% endif %}
-        <a href="/pomodoro">Pomodoro</a> <br>
     </div>
     {% with messages = get_flashed_messages() %}
     {% if messages %}

@@ -13,10 +13,12 @@
         <div>
             {% if current_user.is_authenticated %}
             <a href="/logout">Log out</a>
+            <a href="/pomodoro">Pomodoro</a>
+            <a href="/todo">ToDo Tracker</a>
+            
             {% else %}
             <a href="/signup">Sign up</a> <br>
             <a href="/login"> Log In</a><br>
-            <a href="/pomodoro">Pomodoro</a>
             {% endif %}
         </div>
         {% with messages = get_flashed_messages() %}

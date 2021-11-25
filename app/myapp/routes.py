@@ -2,11 +2,11 @@ from flask import render_template, flash, redirect, url_for, request
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
-from myapp import myapp_obj
+from myapp import myapp_obj, db
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm
-from myapp import db
-from myapp.models import User, FlashCard
+from myapp.models import User, FlashCard, Todo
 from myapp.mdparser import md2flashcard
+from flask_sqlalchemy import SQLAlchemy
 
 @myapp_obj.route("/")
 def home():
@@ -72,6 +72,35 @@ def add_flashcard():
 def tomato():
     return render_template("/pomodoro.html")
 
+# Todo app
+@myapp_obj.route("/todo")
+def myTodo():
+    todo_list = Todo.query.all()
+    return render_template("todo.html", todo_list = todo_list)
+
+@myapp_obj.route("/addTodo", methods=["POST"])
+def addTodo():
+    title = request.form.get("title")
+    new_todo = Todo(title = title, complete = False)
+    db.session.add(new_todo)
+    db.session.commit()
+    return redirect(url_for("myTodo"))
+
+@myapp_obj.route("/updateTodo/<int:todo_id>")
+def updateTodo(todo_id):
+    todo = Todo.query.filter_by(id = todo_id).first()
+    todo.complete = not todo.complete
+    db.session.commit()
+    return redirect(url_for("myTodo"))
+
+@myapp_obj.route("/deleteTodo/<int:todo_id>")
+def deleteTodo(todo_id):
+    todo = Todo.query.filter_by(id=todo_id).first()
+    db.session.delete(todo)
+    db.session.commit()
+    return redirect(url_for("myTodo"))
+
+# flashcard
 @myapp_obj.route("/my-flashcard")
 @login_required
 def show_flashcard():

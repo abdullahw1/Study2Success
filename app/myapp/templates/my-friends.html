@@ -3,8 +3,13 @@
 <p>
     Friends:
     <ul>
-        {% for friend, status in friends %}
-            <li>User:{{ friend.username }}, Status:{{ status.name }}</li>
+        {% for friend, status, buttons in friends %}
+            <li>
+                User:{{ friend.username }}, Status:{{ status.name }}
+                {% for href, tag_descrp in buttons %}
+                    <a href="{{ href }}">{{ tag_descrp }}</a>
+                {% endfor %}
+            </li>
         {% endfor %}
     </ul>
 </p>

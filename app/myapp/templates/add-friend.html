@@ -8,8 +8,13 @@
     </p>
     <p>
         <ul>
-            {% for user in found_users %}
-                <li>{{ user.username }} <a href="/add-friend/{{ user.id }}">Add</a></li>
+            {% for username, buttons in found_users %}
+                <li>
+                    {{ username }}
+                    {% for href, tag_descrp in buttons %}
+                        <a href="{{ href }}">{{ tag_descrp }}</a>
+                    {% endfor %}
+                </li>
             {% endfor %}
         </ul>
     </p>

@@ -3,6 +3,8 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired, Email, EqualTo
 from wtforms import ValidationError
+from flask_pagedown.fields import PageDownField
+
 
 from myapp.models import User
 
@@ -45,3 +47,8 @@ class UploadMarkdownForm(FlaskForm):
 class SearchForm(FlaskForm):
     text = StringField('Text', validators=[DataRequired()])
     button = SubmitField('Search')
+    
+class renderMarkdown(FlaskForm):
+    pagedown = PageDownField('Enter markdown text')
+    submit = SubmitField('Download')
+

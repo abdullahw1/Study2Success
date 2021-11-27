@@ -76,7 +76,7 @@ def add_flashcard():
 def show_flashcard():
     # cards = FlashCard.query.filter_by(user_id = current_user.get_id()).all()
     ordered_cards = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned).all()
-    if ordered_cards is None:
+    if not ordered_cards:
         flash("You don't have any flashcards. Please create one")
         return redirect(url_for("add_flashcard"))
     return render_template("my-flashcards.html", ordered_cards=ordered_cards)

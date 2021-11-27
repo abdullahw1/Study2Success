@@ -3,6 +3,8 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, InputRequired, Email, EqualTo
 from wtforms import ValidationError
+from flask_pagedown.fields import PageDownField
+
 
 from myapp.models import User
 
@@ -50,3 +52,8 @@ class SearchForm(FlaskForm):
 class ShareFlashCardForm(FlaskForm):
     dropdown = SelectField('Dropdown', coerce=int)
     share = SubmitField('Share')
+    
+class renderMarkdown(FlaskForm):
+    pagedown = PageDownField('Enter markdown text')
+    submit = SubmitField('Download as pdf')
+

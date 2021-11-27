@@ -1,11 +1,12 @@
+from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
 from myapp import myapp_obj, db, nav
-from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm
-from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo
-from myapp.models import get_friend_status
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm
+from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard
+from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
 
 
@@ -102,41 +103,103 @@ def import_flashcard():
 @login_required
 def learn_flashcard():
     # Not implemented yet, redirect back
+    flash(f'Feature not implemented yet')
     return redirect(url_for("show_flashcard"))
+
+
+@myapp_obj.route("/remove-flashcard/<int:flashcard_id>", methods=['GET', 'POST'])
+@login_required
+def remove_flashcard(flashcard_id):
+    flashcard = FlashCard.query.filter_by(id=flashcard_id).one_or_none()
+    if flashcard:
+        flash(f'Deleted flashcard front="{flashcard.front}", back="{flashcard.back}"')
+        db.session.delete(flashcard)
+        db.session.commit()
+    return redirect(url_for("show_flashcard"))
+
+
+@myapp_obj.route("/share-flashcard/<int:flashcard_id>", methods=['GET', 'POST'])
+@login_required
+def share_flashcard(flashcard_id):
+    flashcard = FlashCard.query.filter_by(id=flashcard_id).one_or_none()
+    if not flashcard:
+        abort(404, Description=f'Unable to find flashcard with id {flashcard_id}')
+    friends = []
+    for status, oth_user in get_all_friends(current_user.get_id()):
+        if status == 'friend': # Only find friends
+            friends.append(oth_user)
+    form = ShareFlashCardForm()
+    form.dropdown.choices = [(u.id, u.username) for u in friends]
+    if form.validate_on_submit():
+        user = User.query.filter_by(id=form.dropdown.data).one()
+        now = datetime.now()
+        share_card = SharedFlashCard(flashcard_id=flashcard_id,
+                                    datetime=now,
+                                    owner_user_id=current_user.get_id(),
+                                    target_user_id=user.id)
+        db.session.add(share_card)
+        db.session.commit()
+        flash(f'Shared flashcard(#{flashcard_id}) to "{user.username}" on {str(now)}')
+        return redirect(url_for("show_flashcard"))
+    return render_template("share-flashcard.html", flashcard=flashcard, form=form)
+
+
+@myapp_obj.route("/flashcards-sharing", methods=['GET', 'POST'])
+@login_required
+def flashcards_sharing():
+    owner_flashcards = SharedFlashCard.query.filter_by(owner_user_id=current_user.get_id()).all()
+    target_flashcards = SharedFlashCard.query.filter_by(target_user_id=current_user.get_id()).all()
+    return render_template("flashcards-sharing.html", owner_flashcards=owner_flashcards, target_flashcards=target_flashcards)
+
+
+@myapp_obj.route("/flashcards-sharing/add-to-myflashcards/<int:sharing_id>", methods=['GET', 'POST'])
+@login_required
+def flashcards_sharing_add_to_myflashcards(sharing_id):
+    sharing = SharedFlashCard.query.get(sharing_id)
+    if int(current_user.get_id()) != sharing.owner_user_id and\
+        int(current_user.get_id()) != sharing.target_user_id:
+        abort(404, description='Invalid permission')
+    card = FlashCard(front=sharing.flashcard.front, back=sharing.flashcard.back, learned=0, user=current_user._get_current_object())
+    db.session.add(card)
+    db.session.commit()
+    flash(f'Copied flashcard(#{sharing.flashcard.id}) to "My Flashcards", new flashcard(#{card.id})')
+    return redirect(url_for('flashcards_sharing'))
+
+
+@myapp_obj.route("/flashcards-sharing/cancel-sharing/<int:sharing_id>", methods=['GET', 'POST'])
+@login_required
+def flashcards_sharing_cancel_sharing(sharing_id):
+    sharing = SharedFlashCard.query.get(sharing_id)
+    if int(current_user.get_id()) != sharing.owner_user_id and\
+        int(current_user.get_id()) != sharing.target_user_id:
+        abort(404, description='Invalid permission')
+    flash(f'Sharing of flashcard(#{sharing.flashcard.id}) cancelled')
+    db.session.delete(sharing)
+    db.session.commit()
+    return redirect(url_for('flashcards_sharing'))
+
 
 
 # Friends
 @myapp_obj.route("/my-friends", methods=['GET', 'POST'])
 @login_required
 def show_friends():
+    # Handle show all friends
     friends = []
-    result = db.session.query(Friend)\
-                .filter((Friend.user1_id == current_user.get_id())\
-                        | (Friend.user2_id == current_user.get_id())
-                ).all()
-    for x in result:
-        if x.user1.id == int(current_user.get_id()):
-            cur_user = x.user1
-            oth_user = x.user2
-        else:
-            cur_user = x.user2
-            oth_user = x.user1
-        if x.status == FriendStatusEnum.FRIEND:
+    for status, oth_user in get_all_friends(current_user.get_id()):
+        if status == 'friend':
             buttons = [(f'/remove-friend/{oth_user.id}', 'Remove Friend')]
-        elif x.status == FriendStatusEnum.PENDING:
-            if cur_user is x.user1: # Current user sent the request
-                buttons = [(f'/remove-friend/{oth_user.id}', 'Unsend')]
-            else: # Other user sent the request
-                buttons = [(f'/add-friend/{oth_user.id}', 'Approve'), (f'/remove-friend/{oth_user.id}', 'Reject')]
+            print_status = 'Friend'
+        elif status == 'pending-sent-request':
+            buttons = [(f'/remove-friend/{oth_user.id}', 'Unsend')]
+            print_status = 'Sent'
+        elif status == 'pending-to-approve':
+            buttons = [(f'/add-friend/{oth_user.id}', 'Approve'), (f'/remove-friend/{oth_user.id}', 'Reject')]
+            print_status = 'Pending'
         else:
-            abort(404, f'Unknown status {x.status}')
-        friends.append((oth_user, x.status, buttons))
-    return render_template("my-friends.html", friends=friends)
-
-
-@myapp_obj.route("/add-friend", methods=['GET', 'POST'])
-@login_required
-def add_friend():
+            abort(404, f'Unknown status {status}')
+        friends.append((oth_user, print_status, buttons))
+    # Handle Add user
     found_users = []
     search_form = SearchForm()
     if search_form.validate_on_submit():
@@ -155,7 +218,7 @@ def add_friend():
             else:
                 abort(404, description=f'Unknown status {status}')
             found_users.append((user.username, buttons))
-    return render_template("add-friend.html", search_form=search_form, found_users=found_users)
+    return render_template("my-friends.html", friends=friends, search_form=search_form, found_users=found_users)
 
 
 @myapp_obj.route("/add-friend/<int:user_id>", methods=['GET', 'POST'])

@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, a
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
-from myapp import myapp_obj, db, nav
+from myapp import myapp_obj, db
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm
 from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard
 from myapp.models_methods import get_friend_status, get_all_friends

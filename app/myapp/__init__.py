@@ -3,7 +3,6 @@ import flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
-from flask_nav import Nav
 from flask_pagedown import PageDown
 
 # gives current directory of this file
@@ -27,9 +26,6 @@ db = SQLAlchemy(myapp_obj)
 login = LoginManager(myapp_obj)
 login.login_view = 'login'
 
-# Install navbar
-nav = Nav()
-nav.init_app(myapp_obj)
 pagedown = PageDown(myapp_obj)
 
 from myapp import routes, models

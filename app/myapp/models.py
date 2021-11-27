@@ -21,8 +21,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(64))
     flashcards = db.relationship('FlashCard', backref='user' , lazy='dynamic')
-    friend1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
-    friend2 = db.relationship('Friend', backref='user2' , lazy='dynamic', foreign_keys=[Friend.user2_id])
+    friends1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
+    friends2 = db.relationship('Friend', backref='user2' , lazy='dynamic', foreign_keys=[Friend.user2_id])
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -48,9 +48,19 @@ class FlashCard(db.Model):
     back = db.Column(db.Text)
     learned = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    sharings = db.relationship('SharedFlashCard', backref='flashcard', cascade='all, delete')
 
     def __repr__(self):
         return f'<FlashCard {self.id}: {self.front}, {self.back}>'
+
+class SharedFlashCard(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    datetime = db.Column(db.DateTime)
+    flashcard_id = db.Column(db.Integer, db.ForeignKey('flash_card.id'))
+    owner_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner_user = db.relationship('User', foreign_keys=[owner_user_id])
+    target_user = db.relationship('User', foreign_keys=[target_user_id])
 
 
 # class CardProgress(db.Model):
@@ -58,25 +68,3 @@ class FlashCard(db.Model):
 #     progress = db.Column(db.Text)
 #     index = db.Column(db.Integer)
 #     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-def get_friend_status(current_user_id, other_user_id):
-    # Get and Check if has pending friend request or already a friend
-    friend_record = db.session.query(Friend)\
-                    .filter(((Friend.user1_id == current_user_id) & (Friend.user2_id == other_user_id))\
-                            | ((Friend.user2_id == current_user_id) & (Friend.user1_id == other_user_id))
-                    ).one_or_none()
-    # If found friend record
-    if friend_record:
-        if friend_record.status == FriendStatusEnum.FRIEND:
-            status = 'friend'
-        elif friend_record.status == FriendStatusEnum.PENDING:
-            if friend_record.user1.id == int(current_user_id): # Current user sent the request
-                status = 'pending-sent-request'
-            else: # The other user sent the request, current user needs to approve
-                status = 'pending-to-approve'
-        else:
-            raise Exception(f"Unknown status {friend_record.status}")
-    else:
-        # No record, not friend/pending, neutral
-        status = 'neutral'
-    return status, friend_record

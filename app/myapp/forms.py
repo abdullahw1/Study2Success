@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, InputRequired, Email, EqualTo
 from wtforms import ValidationError
 from flask_pagedown.fields import PageDownField
@@ -47,6 +47,11 @@ class UploadMarkdownForm(FlaskForm):
 class SearchForm(FlaskForm):
     text = StringField('Text', validators=[DataRequired()])
     button = SubmitField('Search')
+
+
+class ShareFlashCardForm(FlaskForm):
+    dropdown = SelectField('Dropdown', coerce=int)
+    share = SubmitField('Share')
     
 class renderMarkdown(FlaskForm):
     pagedown = PageDownField('Enter markdown text')

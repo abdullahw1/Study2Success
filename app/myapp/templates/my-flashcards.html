@@ -1,11 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>My FlashCards</h1>
-{% for card in ordered_cards %}
-<p> <b>{{ card.front}}</b> <br>
-    {{ card.back}} </p>
-{% endfor %}
+<br>
 <a class="btn btn-outline-primary" href="add-flashcard">Create</a>
 <a class="btn btn-outline-primary" href='import-flashcard'>Import</a>
 <a class="btn btn-outline-primary" href="learn-flashcard">Learn</a>
+<br>
+<br>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Flashcard</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for card in ordered_cards %}
+        <tr>
+            <th scope="row">{{ card.id }}</th>
+            <td>
+                <p>
+                    <b>{{ card.front}}</b>
+                    <br>
+                    {{ card.back}}
+                </p>
+            </td>
+            <td>
+                <a class="btn btn-outline-primary" href="remove-flashcard/{{ card.id }}">Remove</a>
+                <a class="btn btn-outline-primary" href="share-flashcard/{{ card.id }}">Share</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

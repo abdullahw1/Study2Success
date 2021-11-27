@@ -50,5 +50,5 @@ class SearchForm(FlaskForm):
     
 class renderMarkdown(FlaskForm):
     pagedown = PageDownField('Enter markdown text')
-    submit = SubmitField('Download')
+    submit = SubmitField('Download as pdf')
 

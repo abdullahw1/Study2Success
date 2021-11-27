@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
 from myapp import myapp_obj, db, nav
-from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, renderMarkdown
 from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo
 from myapp.models import get_friend_status
 from myapp.mdparser import md2flashcard
@@ -251,3 +251,15 @@ def page_not_found(e):
     return jsonify(error=str(e)), 404
 
 myapp_obj.register_error_handler(404, page_not_found)
+
+@myapp_obj.route("/render", methods = ['GET', 'POST'])
+@login_required
+def render():
+    form = renderMarkdown()
+    text = None
+    if form.validate_on_submit():
+        text = form.pagedown.data
+    else:
+        form.pagedown.data = ('Enter Markdown ')
+        return render_template('upload_md.html', form=form, text=text)
+

@@ -1,8 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-from myapp import login 
-from myapp import db
+from myapp import login, db
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -28,6 +27,7 @@ class FlashCard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     front = db.Column(db.Text)
     back = db.Column(db.Text)
+    view = db.Column(db.Integer)
     learned = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

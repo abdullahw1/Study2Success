@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-{% for card in cards %}
-<p> {{ card.front}} <br>
-    {{ card.back}} </p>
-<p>{{ form.learned.label }}
-    {{ form.learned() }}</p>
-{% endfor %}
+
+<p> {{ first_card.front}}</p>
+<p>Please choose one</p>
+
+
+
+<form method="POST" novalidate>
+    {{ formNext.hidden_tag()}}
+    <p>{{ form.A() }}</p>
+    <p>{{ form.B() }}</p>
+    <p>{{ form.C() }}</p>
+    <p>{{ form.D() }}</p>
+    <p>{{ formNext.nextCard() }}</p>
+</form>
+
 {% endblock %}

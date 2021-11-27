@@ -35,3 +35,12 @@ class FlashCardForm(FlaskForm):
 
 class NextButton(FlaskForm):
     nextCard = SubmitField('Next')
+
+class PreviousButton(FlaskForm):
+    Previous = SubmitField('Previous')
+
+class ObjectiveForm(FlaskForm):
+    A = SubmitField('A')
+    B = SubmitField('B')
+    C = SubmitField('C')
+    D = SubmitField('D')

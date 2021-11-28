@@ -18,7 +18,7 @@
 
 
 ## Specifications
-This is a project work in progress, for more information, please check out the [specifications document](./doc/Specification.md).
+This is a project work in progress, for more information, please check out the [specifications document](./docs/Specification.md).
 
 
 ## Contributor Instructions
@@ -37,8 +37,8 @@ Recommended to read the below carefully before contributing to this project. Fee
 
 ### Understanding directory structure
     .
-    ├── docs                # Documentation (E.g. Markdown documentations)
-    |   └── images          # Images needed for the documentation
+    ├── docs                # Documentation folder (also used by [mkdocs](https://www.mkdocs.org)
+    |   └── css             # CSS stylesheets needed for the documentations
     └── app                 # Source code for applications
 
 ### Github flow

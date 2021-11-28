@@ -9,6 +9,9 @@
     - [Understanding directory structure](#understanding-directory-structure)
     - [Github flow](#github-flow)
 
+## Documentations
+For detailed documentations, please refer our hosted docs website [here](https://hoatnnguyen.github.io/Study2Success/)
+
 
 ## Contributors
 - [@Hoa Nguyen](https://github.com/HoaTNNguyen)

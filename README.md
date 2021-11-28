@@ -10,7 +10,7 @@
     - [Github flow](#github-flow)
 
 ## Documentations
-For detailed documentations, please refer our hosted docs website [here](https://hoatnnguyen.github.io/Study2Success/)
+For detailed documentations, please refer our hosted docs website [here](https://hoatnnguyen.github.io/Study2Success)
 
 
 ## Contributors

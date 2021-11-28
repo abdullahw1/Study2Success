@@ -1,10 +1,35 @@
+"""This module holds all the flask routes of our app (all URL paths) 
+and incharge of the frontend for rendering html templates.
+
+The standarn convention of defining a route here is:
+
+```python
+@myapp_obj.route("/my-route")
+def my_route():
+    # Code here
+    return render_template("my_route.html")
+```
+
+Or we could redirect to an existing route using:
+
+```python
+@myapp_obj.route("/my-route1")
+def my_route1():
+    # Code here
+    return redirect(url_for("my_route"))
+```
+
+Detailed flask documentation can be found [here](https://flask.palletsprojects.com/en/2.0.x/api/).
+
+"""
+
 from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
 from myapp import myapp_obj, db
-from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, renderMarkdown
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown
 from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
@@ -12,10 +37,12 @@ from myapp.mdparser import md2flashcard
 
 @myapp_obj.route("/")
 def home():
+    """Homepage route"""
     return render_template("homepage.html")
 
 @myapp_obj.route("/signup", methods=['GET', 'POST'])
 def signup():
+    """Signup page route"""
     if current_user.is_authenticated:
         return redirect(url_for("log"))
     form = SignupForm()
@@ -31,6 +58,7 @@ def signup():
 
 @myapp_obj.route("/login", methods=['GET', 'POST'])
 def login():
+    """Login page route"""
     if current_user.is_authenticated:
         return redirect(url_for("log"))
     form = LoginForm()
@@ -49,11 +77,13 @@ def login():
 @myapp_obj.route("/loggedin")
 @login_required
 def log():
+    """User logged in route, this redirects to homepage"""
     return render_template("/homepage.html")
 
 @myapp_obj.route("/logout")
 @login_required
 def logout():
+    """User logged out route, this logout the user and redirects to homepage"""
     logout_user()
     return redirect(url_for("home"))
 
@@ -61,6 +91,7 @@ def logout():
 @myapp_obj.route("/add-flashcard", methods=['GET', 'POST'])
 @login_required
 def add_flashcard():
+    """Add flashcard page route, allow user to use FlashCardForm to add a new flashcard"""
     form = FlashCardForm()
     if form.validate_on_submit():
         card = FlashCard(front=form.front.data, back=form.back.data, learned=0, user=current_user._get_current_object())
@@ -74,7 +105,7 @@ def add_flashcard():
 @myapp_obj.route("/my-flashcards")
 @login_required
 def show_flashcard():
-    # cards = FlashCard.query.filter_by(user_id = current_user.get_id()).all()
+    """My Flashcard route, to show all flashcard of current user"""
     ordered_cards = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned).all()
     if not ordered_cards:
         flash("You don't have any flashcards. Please create one")
@@ -85,6 +116,7 @@ def show_flashcard():
 @myapp_obj.route("/import-flashcard", methods=['GET', 'POST'])
 @login_required
 def import_flashcard():
+    """Import Flashcard route, for user to import markdown file into flashcard"""
     form = UploadMarkdownForm()
     if form.validate_on_submit():
         f = form.file.data
@@ -102,6 +134,7 @@ def import_flashcard():
 @myapp_obj.route("/learn-flashcard", methods=['GET', 'POST'])
 @login_required
 def learn_flashcard():
+    """Learn Flashcard route, for user to learn from all it's existing flashcards in My Flashcards"""
     # Not implemented yet, redirect back
     flash(f'Feature not implemented yet')
     return redirect(url_for("show_flashcard"))
@@ -110,6 +143,9 @@ def learn_flashcard():
 @myapp_obj.route("/remove-flashcard/<int:flashcard_id>", methods=['GET', 'POST'])
 @login_required
 def remove_flashcard(flashcard_id):
+    """A route to remove a flashcard from user's MyFlashCard,
+    this will redirect back to My Flashcards after removing the specified card
+    """
     flashcard = FlashCard.query.filter_by(id=flashcard_id).one_or_none()
     if flashcard:
         flash(f'Deleted flashcard front="{flashcard.front}", back="{flashcard.back}"')
@@ -121,6 +157,9 @@ def remove_flashcard(flashcard_id):
 @myapp_obj.route("/share-flashcard/<int:flashcard_id>", methods=['GET', 'POST'])
 @login_required
 def share_flashcard(flashcard_id):
+    """A route for user to use the ShareFlashCardForm to select which friend they
+    want to share the specified flashcard with.
+    """
     flashcard = FlashCard.query.filter_by(id=flashcard_id).one_or_none()
     if not flashcard:
         abort(404, Description=f'Unable to find flashcard with id {flashcard_id}')
@@ -147,6 +186,7 @@ def share_flashcard(flashcard_id):
 @myapp_obj.route("/flashcards-sharing", methods=['GET', 'POST'])
 @login_required
 def flashcards_sharing():
+    """A route for viewing sharing status of flashcards (both shared to others and others shared to me)"""
     owner_flashcards = SharedFlashCard.query.filter_by(owner_user_id=current_user.get_id()).all()
     target_flashcards = SharedFlashCard.query.filter_by(target_user_id=current_user.get_id()).all()
     return render_template("flashcards-sharing.html", owner_flashcards=owner_flashcards, target_flashcards=target_flashcards)
@@ -155,6 +195,7 @@ def flashcards_sharing():
 @myapp_obj.route("/flashcards-sharing/add-to-myflashcards/<int:sharing_id>", methods=['GET', 'POST'])
 @login_required
 def flashcards_sharing_add_to_myflashcards(sharing_id):
+    """A route for adding shared flashcard that other user shared into My FlashCards"""
     sharing = SharedFlashCard.query.get(sharing_id)
     if int(current_user.get_id()) != sharing.owner_user_id and\
         int(current_user.get_id()) != sharing.target_user_id:
@@ -169,6 +210,7 @@ def flashcards_sharing_add_to_myflashcards(sharing_id):
 @myapp_obj.route("/flashcards-sharing/cancel-sharing/<int:sharing_id>", methods=['GET', 'POST'])
 @login_required
 def flashcards_sharing_cancel_sharing(sharing_id):
+    """A route for cancelling a flashcard sharing"""
     sharing = SharedFlashCard.query.get(sharing_id)
     if int(current_user.get_id()) != sharing.owner_user_id and\
         int(current_user.get_id()) != sharing.target_user_id:
@@ -184,6 +226,7 @@ def flashcards_sharing_cancel_sharing(sharing_id):
 @myapp_obj.route("/my-friends", methods=['GET', 'POST'])
 @login_required
 def show_friends():
+    """My Friends route for viewing all friends and accepting/rejecting pending friend requests"""
     # Handle show all friends
     friends = []
     for status, oth_user in get_all_friends(current_user.get_id()):
@@ -224,6 +267,7 @@ def show_friends():
 @myapp_obj.route("/add-friend/<int:user_id>", methods=['GET', 'POST'])
 @login_required
 def add_friend_userid_provided(user_id):
+    """A route for handling an add friend request, this will redirect back to MyFriends page"""
     # Abort if adding self as friend
     if int(current_user.get_id()) == user_id:
         return abort(404, description="Cannot add yourself as friend")
@@ -255,6 +299,9 @@ def add_friend_userid_provided(user_id):
 @myapp_obj.route("/remove-friend/<int:user_id>", methods=['GET', 'POST'])
 @login_required
 def remove_friend_userid_provided(user_id):
+    """A route for handling cancel sent friend request and reject freind request,
+    this will then redirect back to MyFriends page
+    """
     # Abort if removing self as friend
     if int(current_user.get_id()) == user_id:
         return abort(404, description="Cannot remove yourself from friend")
@@ -279,16 +326,19 @@ def remove_friend_userid_provided(user_id):
 #Pomodoro app
 @myapp_obj.route("/pomodoro")
 def tomato():
+    """Show Pomodoro timer route"""
     return render_template("/pomodoro.html")
 
 # Todo app
 @myapp_obj.route("/todo")
 def myTodo():
+    """Show ToDo list route"""
     todo_list = Todo.query.all()
     return render_template("todo.html", todo_list=todo_list)
 
 @myapp_obj.route("/addTodo", methods=["POST"])
 def addTodo():
+    """Add ToDo item into ToDo list, then redirect back to show ToDo list"""
     title = request.form.get("title")
     new_todo = Todo(title=title, complete=False)
     db.session.add(new_todo)
@@ -297,6 +347,7 @@ def addTodo():
 
 @myapp_obj.route("/updateTodo/<int:todo_id>")
 def updateTodo(todo_id):
+    """Mark ToDo item to complete/not complete, then redirect back to show ToDo list"""
     todo = Todo.query.filter_by(id=todo_id).first()
     todo.complete = not todo.complete
     db.session.commit()
@@ -304,6 +355,7 @@ def updateTodo(todo_id):
 
 @myapp_obj.route("/deleteTodo/<int:todo_id>")
 def deleteTodo(todo_id):
+    """Remove ToDo item from ToDo list, then redirect back to show ToDo list"""
     todo = Todo.query.filter_by(id=todo_id).first()
     db.session.delete(todo)
     db.session.commit()
@@ -311,6 +363,7 @@ def deleteTodo(todo_id):
 
 @myapp_obj.errorhandler(404)
 def page_not_found(e):
+    """Handler error404 and print out description of error"""
     return jsonify(error=str(e)), 404
 
 myapp_obj.register_error_handler(404, page_not_found)
@@ -318,7 +371,8 @@ myapp_obj.register_error_handler(404, page_not_found)
 @myapp_obj.route("/render", methods = ['GET', 'POST'])
 @login_required
 def render():
-    form = renderMarkdown()
+    """Route for user to render markdwon notes"""
+    form = RenderMarkdown()
     text = None
     if form.validate_on_submit():
         text = form.pagedown.data

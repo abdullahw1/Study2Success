@@ -2,6 +2,8 @@ site_name: Study2Success
 theme:
     name: material
 
+use_directory_urls: false
+
 plugins:
 - search
 - mkdocstrings:

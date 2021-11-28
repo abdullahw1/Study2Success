@@ -1,0 +1,18 @@
+site_name: Study2Success
+theme:
+    name: material
+
+plugins:
+- search
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        setup_commands:
+            - import sys
+            - sys.path.append("app")
+    watch:
+      - app/myapp
+
+extra_css:
+  - css/mkdocstrings.css

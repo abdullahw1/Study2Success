@@ -6,6 +6,17 @@ def get_user_from_id(user_id):
 
 
 def get_friend_status(current_user_id, other_user_id):
+    """Function returning friend status between two users
+
+    Arguments:
+        current_user_id: id of user1
+        other_user_id: id of user2
+    
+    Returns:
+        tuple: In the format `(status, friend_record)` whereas `status` can be either string of
+        'friend', 'pending-sent-request', 'pending-to-approve', while friend_record is an object
+        of `myapp.models.Friend`
+    """
     # Get and Check if has pending friend request or already a friend
     friend_record = Friend.query.filter(
                         ((Friend.user1_id == current_user_id) & (Friend.user2_id == other_user_id))\
@@ -29,6 +40,17 @@ def get_friend_status(current_user_id, other_user_id):
 
 
 def get_all_friends(current_user_id):
+    """Function returning all friends of the specified user
+
+    Arguments:
+        current_user_id: id of the user that we want to get friends list
+    
+    Returns:
+        list: A list of tuples with the format `(status, other_user)`
+        whereas `status` can be either string of 'friend', 'pending-sent-request',
+        'pending-to-approve', and `other_user` is a `models.User` object.
+
+    """
     result = Friend.query.filter(
                 (Friend.user1_id == current_user_id)\
                 | (Friend.user2_id == current_user_id)

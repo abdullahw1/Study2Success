@@ -230,7 +230,6 @@ def download_flashcard_as_pdf():
         cards.append(f'\n---\n\n**{card.front}**\n\n?\n\n{card.back}\n\n---\n\n')
     cards_text = '\n'.join(cards)
     md_text = '## Flashcards\n\n' + cards_text
-    print(md_text)
     # Covert to html
     html = markdown.markdown(md_text)
     with tempfile.TemporaryDirectory() as temp_dir:

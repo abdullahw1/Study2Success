@@ -59,5 +59,7 @@ def note(user_id):
 @myapp_obj.route("/viewNote/<int:user_id>/<int:id>", methods = ['GET', 'POST'])
 @login_required
 def viewNotes(user_id, id):
+    '''(not functional) route will allow for file to be opened and viewed in html '''
+    
 
 

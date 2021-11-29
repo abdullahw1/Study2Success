@@ -70,6 +70,7 @@ class User(UserMixin, db.Model):
     
     def __repr__(self):
         return f'<User {self.id}: {self.username}, {self.password}>'
+  
 
 
 class Todo(db.Model):
@@ -130,3 +131,20 @@ class SharedFlashCard(db.Model):
     target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     owner_user = db.relationship('User', foreign_keys=[owner_user_id])
     target_user = db.relationship('User', foreign_keys=[target_user_id])
+   
+class Notes(db.Model):
+    """Database table for notes
+
+     Attributes:
+         id: Primary key
+         title: String column, title of note
+         data: text column, containing files data
+         User: id if user who added notes
+     """
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    data = db.Column(db.Text)
+    User = db.Column(db.Integer, db.ForeignKey('user.id'))
+    def __repr__(self):
+        return f'<{self.name}   {self.data}>'

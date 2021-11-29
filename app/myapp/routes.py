@@ -431,35 +431,39 @@ def tomato():
 
 # Todo app
 @myapp_obj.route("/todo")
+@login_required
 def myTodo():
     """Show ToDo list route"""
-    todo_list = Todo.query.all()
+    todo_list = Todo.query.filter_by(user_id=current_user.get_id()).all()
     return render_template("todo.html", todo_list=todo_list)
 
 
 @myapp_obj.route("/addTodo", methods=["POST"])
+@login_required
 def addTodo():
     """Add ToDo item into ToDo list, then redirect back to show ToDo list"""
     title = request.form.get("title")
-    new_todo = Todo(title=title, complete=False)
+    new_todo = Todo(title=title, user_id=current_user.get_id(), complete=False)
     db.session.add(new_todo)
     db.session.commit()
     return redirect(url_for("myTodo"))
 
 
 @myapp_obj.route("/updateTodo/<int:todo_id>")
+@login_required
 def updateTodo(todo_id):
     """Mark ToDo item to complete/not complete, then redirect back to show ToDo list"""
-    todo = Todo.query.filter_by(id=todo_id).first()
+    todo = Todo.query.filter_by(id=todo_id, user_id=current_user.get_id()).first()
     todo.complete = not todo.complete
     db.session.commit()
     return redirect(url_for("myTodo"))
 
 
 @myapp_obj.route("/deleteTodo/<int:todo_id>")
+@login_required
 def deleteTodo(todo_id):
     """Remove ToDo item from ToDo list, then redirect back to show ToDo list"""
-    todo = Todo.query.filter_by(id=todo_id).first()
+    todo = Todo.query.filter_by(id=todo_id, user_id=current_user.get_id()).first()
     db.session.delete(todo)
     db.session.commit()
     return redirect(url_for("myTodo"))

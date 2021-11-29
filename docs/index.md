@@ -22,7 +22,8 @@ when using the created account. To set up a server, please follow the instructio
 
 4. It's recommended to create a virtual environment so we can make sure we have correct packages
 
-        % python3 venv venv
+        % pip3 install venv
+        % python3 -m venv venv
         % source venv/bin/activate
 
 5. Install all the packages from `requirements.txt`
@@ -40,6 +41,42 @@ when using the created account. To set up a server, please follow the instructio
 - [@Jerusalem Ilag](https://github.com/jeruilag)
 - [@Abdullah Waheed](https://github.com/abdullahw1)
 
+
+## Directory structure
+
+```
+.
+├── app                                         # Source code for applications
+|   ├── myapp              
+|   |   ├── static                              # CSS stylesheets, images, and javascript files needed for the app
+|   |   ├── templates                           # contains all html files
+|   |   |   ├── add-flashcard.html
+|   |   |   ├── base.html
+|   |   |   ├── flashcards-sharing.html
+|   |   |   ├── homepage.html
+|   |   |   ├── import-flashcard.html
+|   |   |   ├── learn-flashcard.html
+|   |   |   ├── login.html
+|   |   |   ├── my-flashcards.html
+|   |   |   ├── my-friends.html
+|   |   |   ├── pomodoro.html
+|   |   |   ├── share-flashcard.html
+|   |   |   ├── signup.html
+|   |   |   ├── todo.html
+|   |   |   └── upload_md.html
+|   |   ├── __init__.py                         # Set up flask and import library server
+|   |   ├── forms.py                            # holds the code of all WTForms
+|   |   ├── mdparser.py                         # holds the code helps extract markdown content into a list of Flashcards
+|   |   ├── models.py                           # holds a list of Class that each representing the database table
+|   |   ├── models_enum.py                      # Enum representing friend status in database
+|   |   ├── models_methods.py                   # Functions returning all friends of a specified user
+|   |   └── routes.py                           # hods all the routes of the app
+|   └── run.py
+├── docs                                        # Documentation folder (also used by [mkdocs](https://www.mkdocs.org) 
+├── etc                                         # Contains all example files upload
+├── mkdocs.yml                                  # Configuration file for mkdocs
+└── requirements.txt                            # Dependency python packages
+```
 
 ## Specifications
 This is a project work in progress, for more information, please check out the [specifications document](Specification.md).

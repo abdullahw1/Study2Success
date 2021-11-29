@@ -12,7 +12,7 @@ def launch_browser():
 
 # Create *.db file from schema (if doesn't exists)
 db.create_all()
-# Launch webbrowser after 1 seconds
+
 if not DEBUG:
     threading.Timer(1, launch_browser).start()
 # Run flask app server

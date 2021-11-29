@@ -16,6 +16,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 from myapp import login, db
+
 from myapp.models_enum import FriendStatusEnum
 
 class Friend(db.Model):
@@ -39,6 +40,7 @@ class Friend(db.Model):
     user1_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user2_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     status = db.Column(db.Enum(FriendStatusEnum))
+
 
 class User(UserMixin, db.Model):
     """Database table holding main user data, and hold relationships to other tables
@@ -69,6 +71,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.id}: {self.username}, {self.password}>'
 
+
 class Todo(db.Model):
     """Saves ToDo lists of users
 
@@ -81,9 +84,11 @@ class Todo(db.Model):
     title = db.Column(db.String(100))
     complete = db.Column(db.Boolean)
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 class FlashCard(db.Model):
     """Saves FlashCards of users
@@ -99,12 +104,14 @@ class FlashCard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     front = db.Column(db.Text)
     back = db.Column(db.Text)
+    view = db.Column(db.Integer)
     learned = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     sharings = db.relationship('SharedFlashCard', backref='flashcard', cascade='all, delete')
 
     def __repr__(self):
         return f'<FlashCard {self.id}: {self.front}, {self.back}>'
+
 
 class SharedFlashCard(db.Model):
     """Saves sharing information of flashcards
@@ -123,10 +130,3 @@ class SharedFlashCard(db.Model):
     target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     owner_user = db.relationship('User', foreign_keys=[owner_user_id])
     target_user = db.relationship('User', foreign_keys=[target_user_id])
-
-
-# class CardProgress(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     progress = db.Column(db.Text)
-#     index = db.Column(db.Integer)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

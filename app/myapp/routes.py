@@ -22,14 +22,15 @@ def my_route1():
 Detailed flask documentation can be found [here](https://flask.palletsprojects.com/en/2.0.x/api/).
 
 """
-
+import random
 from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
+
 from myapp import myapp_obj, db
-from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm
 from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
@@ -39,6 +40,7 @@ from myapp.mdparser import md2flashcard
 def home():
     """Homepage route"""
     return render_template("homepage.html")
+
 
 @myapp_obj.route("/signup", methods=['GET', 'POST'])
 def signup():
@@ -55,6 +57,7 @@ def signup():
         return redirect(url_for("home"))
 
     return render_template("signup.html", form=form)
+
 
 @myapp_obj.route("/login", methods=['GET', 'POST'])
 def login():
@@ -74,11 +77,13 @@ def login():
             return redirect('/login')
     return render_template("login.html", form=form)
 
+
 @myapp_obj.route("/loggedin")
 @login_required
 def log():
     """User logged in route, this redirects to homepage"""
     return render_template("/homepage.html")
+
 
 @myapp_obj.route("/logout")
 @login_required
@@ -87,14 +92,14 @@ def logout():
     logout_user()
     return redirect(url_for("home"))
 
-# Flashcards
+
 @myapp_obj.route("/add-flashcard", methods=['GET', 'POST'])
 @login_required
 def add_flashcard():
     """Add flashcard page route, allow user to use FlashCardForm to add a new flashcard"""
     form = FlashCardForm()
     if form.validate_on_submit():
-        card = FlashCard(front=form.front.data, back=form.back.data, learned=0, user=current_user._get_current_object())
+        card = FlashCard(front=form.front.data, back=form.back.data, view=0, learned=0, user=current_user._get_current_object())
         db.session.add(card)
         db.session.commit()
         flash("Flashcard has been created")
@@ -105,12 +110,28 @@ def add_flashcard():
 @myapp_obj.route("/my-flashcards")
 @login_required
 def show_flashcard():
-    """My Flashcard route, to show all flashcard of current user"""
+    """My Flashcard route, to show all flashcard of current user by order based on how often user got answer correct"""
     ordered_cards = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned).all()
     if not ordered_cards:
         flash("You don't have any flashcards. Please create one")
         return redirect(url_for("add_flashcard"))
     return render_template("my-flashcards.html", ordered_cards=ordered_cards)
+
+
+def _shuffle_choices(current_card, cards):
+    """Generate the choices for learn-flashcards feature"""
+    numRow = len(cards) # number of flashcards that the current user has
+    card_id = current_card.id
+    numbers = list(range(1, numRow + 1)) 
+    numbers.remove(card_id) 
+    random.shuffle(numbers)
+    lst_id = []
+    for i in range (3):
+        temp = numbers.pop()
+        lst_id.append(cards[temp-1].id)
+    lst_id.append(card_id)
+    random.shuffle(lst_id)
+    return lst_id
 
 
 @myapp_obj.route("/import-flashcard", methods=['GET', 'POST'])
@@ -135,9 +156,59 @@ def import_flashcard():
 @login_required
 def learn_flashcard():
     """Learn Flashcard route, for user to learn from all it's existing flashcards in My Flashcards"""
-    # Not implemented yet, redirect back
-    flash(f'Feature not implemented yet')
-    return redirect(url_for("show_flashcard"))
+    first_card = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned, FlashCard.view).first()
+    cards = FlashCard.query.filter_by(user_id=current_user.get_id()).all() # list of cards that the current user has
+
+    if len(cards) < 4:
+        flash("You must have at least 4 flashcards. Please create more flashcards")
+        return redirect(url_for("add_flashcard"))
+    
+    form = ObjectiveForm()
+    formNext = NextButton()
+    list_id = _shuffle_choices(first_card, cards)
+    choice = [FlashCard.query.get(x) for x in list_id]
+
+    if form.validate_on_submit():
+        if form.A.data:
+            if form.A.raw_data[0] == first_card.back:
+                flash('Excellent')
+                first_card.learned += 1
+                db.session.commit()
+            else:
+                flash('opps. Wrong answer')
+        elif form.B.data:
+            if form.B.raw_data[0] == first_card.back:
+                first_card.learned += 1
+                db.session.commit()
+                flash('Excellent')
+            else:
+                flash('opps. Wrong answer')
+        elif form.C.data:
+            if form.C.raw_data[0] == first_card.back:
+                flash('Excellent')
+                first_card.learned += 1
+                db.session.commit()
+            else:
+                flash('opps. Wrong answer')
+        elif form.D.data:
+            if form.D.raw_data[0] == first_card.back:
+                flash('Excellent')
+                first_card.learned += 1
+                db.session.commit()
+            else:
+                flash('opps. Wrong answer')
+    else:
+        if formNext.validate_on_submit():
+            flash("hello")
+            first_card.view += 1
+            db.session.commit()
+            return redirect(url_for("learn_flashcard"))
+
+    form.A.label.text = choice[0].back
+    form.B.label.text = choice[1].back
+    form.C.label.text = choice[2].back
+    form.D.label.text = choice[3].back
+    return render_template("learn-flashcard.html", first_card=first_card, form=form, formNext=formNext, choice=choice, list_id=list_id)
 
 
 @myapp_obj.route("/remove-flashcard/<int:flashcard_id>", methods=['GET', 'POST'])
@@ -219,7 +290,6 @@ def flashcards_sharing_cancel_sharing(sharing_id):
     db.session.delete(sharing)
     db.session.commit()
     return redirect(url_for('flashcards_sharing'))
-
 
 
 # Friends
@@ -329,12 +399,14 @@ def tomato():
     """Show Pomodoro timer route"""
     return render_template("/pomodoro.html")
 
+
 # Todo app
 @myapp_obj.route("/todo")
 def myTodo():
     """Show ToDo list route"""
     todo_list = Todo.query.all()
     return render_template("todo.html", todo_list=todo_list)
+
 
 @myapp_obj.route("/addTodo", methods=["POST"])
 def addTodo():
@@ -345,6 +417,7 @@ def addTodo():
     db.session.commit()
     return redirect(url_for("myTodo"))
 
+
 @myapp_obj.route("/updateTodo/<int:todo_id>")
 def updateTodo(todo_id):
     """Mark ToDo item to complete/not complete, then redirect back to show ToDo list"""
@@ -353,6 +426,7 @@ def updateTodo(todo_id):
     db.session.commit()
     return redirect(url_for("myTodo"))
 
+
 @myapp_obj.route("/deleteTodo/<int:todo_id>")
 def deleteTodo(todo_id):
     """Remove ToDo item from ToDo list, then redirect back to show ToDo list"""
@@ -360,6 +434,7 @@ def deleteTodo(todo_id):
     db.session.delete(todo)
     db.session.commit()
     return redirect(url_for("myTodo"))
+
 
 @myapp_obj.errorhandler(404)
 def page_not_found(e):
@@ -379,4 +454,3 @@ def render():
     else:
         form.pagedown.data = ('Enter Markdown ')
         return render_template('upload_md.html', form=form, text=text)
-

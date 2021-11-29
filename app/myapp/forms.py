@@ -13,11 +13,10 @@ More detailed WTForm documentations can be found [here](https://wtforms.readthed
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
+from flask_pagedown.fields import PageDownField
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, InputRequired, Email, EqualTo
 from wtforms import ValidationError
-from flask_pagedown.fields import PageDownField
-
 
 from myapp.models import User
 
@@ -47,6 +46,7 @@ class SignupForm(FlaskForm):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use')
 
+
 class LoginForm(FlaskForm):
     """WTForm for login page
     
@@ -61,6 +61,7 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Sign in')
 
+
 class FlashCardForm(FlaskForm):
     """WTForm for adding a new flashcard
 
@@ -73,6 +74,7 @@ class FlashCardForm(FlaskForm):
     back = TextAreaField('Back', validators=[DataRequired()])
     add = SubmitField('Add')
 
+
 class NextButton(FlaskForm):
     """WTForm for just a next submit field button
     
@@ -80,6 +82,13 @@ class NextButton(FlaskForm):
         nextCard: Submit button to go to next
     """
     nextCard = SubmitField('Next')
+
+
+class ObjectiveForm(FlaskForm):
+    A = SubmitField('A')
+    B = SubmitField('B')
+    C = SubmitField('C')
+    D = SubmitField('D')
 
 
 class UploadMarkdownForm(FlaskForm):
@@ -114,6 +123,7 @@ class ShareFlashCardForm(FlaskForm):
     dropdown = SelectField('Dropdown', coerce=int)
     share = SubmitField('Share')
 
+
 class RenderMarkdown(FlaskForm):
     """WTForm for user to submit markdown note for rendering and download PDF of it
     
@@ -123,4 +133,3 @@ class RenderMarkdown(FlaskForm):
     """
     pagedown = PageDownField('Enter markdown text')
     submit = SubmitField('Download as pdf')
-

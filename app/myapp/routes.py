@@ -42,3 +42,8 @@ def login():
 @login_required
 def log():
     return render_template("/loggedin.html")
+@myapp_obj.route("/note/<int:user_id>", methods = ['GET', 'POST'])
+@login_required
+def note(user_id):
+    """ Route to view a users notes"""
+

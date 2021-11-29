@@ -153,3 +153,22 @@ class Notes(db.Model):
     User = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self):
         return f'<{self.name}   {self.data}>'
+    
+class ShareNotes(db.Model):
+    """Saves sharing information of notes
+
+    Attributes:
+        id: Primary key
+        datetime: Datetime column, time of sharing
+        note_id: Integer column, id of note that is shared
+        owner_user_id: Integer column, id of person sharing the note
+        target_user_id: Integer column, id of person that was shared with the note
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    datetime = db.Column(db.DateTime)
+    note_id = db.Column(db.Integer, db.ForeignKey('flash_card.id'))
+    owner_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner_user = db.relationship('User', foreign_keys=[owner_user_id])
+    target_user = db.relationship('User', foreign_keys=[target_user_id])
+

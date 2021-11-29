@@ -71,7 +71,11 @@ def note2pdf(id):
     note = Notes.query.filter_by(id=id).first()
     data = BytesIO(note.data).read()
     return render_template('pdfrender.html', title='Note', user_id=user_id, id=id, data=data)
-s
+
+@myapp_obj.route("/share_notes/<int:user_id>/<int:id>", methods = ['GET', 'POST'])
+@login_required
+def shareNote(user_id, id):
+
 
 
 

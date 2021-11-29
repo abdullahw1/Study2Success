@@ -11,7 +11,7 @@ This app is intend to serve multiple users with one server running, and each use
 when using the created account. To set up a server, please follow the instructions below.
 
 1. Clone the [GitHub Repo](https://github.com/HoaTNNguyen/Study2Success)
-        
+
         % git clone https://github.com/HoaTNNguyen/Study2Success.git
 
 2. Install latest [Python3.9](https://www.python.org/downloads/)

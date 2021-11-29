@@ -23,10 +23,14 @@ Detailed flask documentation can be found [here](https://flask.palletsprojects.c
 
 """
 
+import os
+import tempfile
 from datetime import datetime
-from flask import render_template, flash, redirect, url_for, request, jsonify, abort
+import markdown
+from flask import render_template, flash, redirect, url_for, request, jsonify, abort, send_file
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
+from xhtml2pdf import pisa
 
 from myapp import myapp_obj, db
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown
@@ -140,6 +144,33 @@ def learn_flashcard():
     return redirect(url_for("show_flashcard"))
 
 
+@myapp_obj.route("/download-flashcard-as-pdf", methods=['GET', 'POST'])
+@login_required
+def download_flashcard_as_pdf():
+    """Download Flashcards to a single PDF file, then it will redirect user back to My Flashcards"""
+    ordered_cards = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned).all()
+    # Handle case of no flashcard
+    if not ordered_cards:
+        abort(404, description="No flashcards found, cannot download as pdf")
+    # Generate markdown content
+    cards = []
+    for idx, card in enumerate(ordered_cards): # Generate a MermaidNode for each card
+        cards.append(f'\n---\n\n**{card.front}**\n\n?\n\n{card.back}\n\n---\n\n')
+    cards_text = '\n'.join(cards)
+    md_text = '## Flashcards\n\n' + cards_text
+    print(md_text)
+    # Covert to html
+    html = markdown.markdown(md_text, extensions=['md_mermaid'])
+    # Append mermaid js location, TODO: make this static
+    html += '\n<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>\n'
+    with tempfile.TemporaryDirectory() as temp_dir:
+        pdf_filename = os.path.join(temp_dir, 'flashcards.pdf')
+        # Convert html to pdf
+        with open(pdf_filename, "wb+") as fp:
+            pisa_status = pisa.CreatePDF(html, dest=fp)
+        return send_file(pdf_filename, as_attachment=True)
+
+
 @myapp_obj.route("/remove-flashcard/<int:flashcard_id>", methods=['GET', 'POST'])
 @login_required
 def remove_flashcard(flashcard_id):
@@ -219,7 +250,6 @@ def flashcards_sharing_cancel_sharing(sharing_id):
     db.session.delete(sharing)
     db.session.commit()
     return redirect(url_for('flashcards_sharing'))
-
 
 
 # Friends

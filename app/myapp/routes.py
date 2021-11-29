@@ -262,4 +262,12 @@ def render():
     else:
         form.pagedown.data = ('Enter Markdown ')
         return render_template('upload_md.html', form=form, text=text)
+   
+
+@myapp_obj.route("/note/<int:user_id>", methods = ['GET', 'POST'])
+@login_required
+def note(user_id):
+    """ Route to view a users notes"""
+    postedNotes = []
+
 

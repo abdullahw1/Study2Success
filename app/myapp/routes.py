@@ -64,5 +64,9 @@ def viewNotes(user_id, id):
     data = BytesIO(note.data).read()
     return render_template('view_note.html', title='Note', user_id=user_id, id=id, data=data)
 
+@myapp_obj.route("/note2pdf/<int:id>", methods = ['GET', 'POST'])
+@login_required
+def note2pdf(id):
+
 
 

@@ -142,7 +142,7 @@ class Notes(db.Model):
 
      Attributes:
          id: Primary key
-         title: String column, title of note
+         name: String column, title of note
          data: text column, containing files data
          User: id if user who added notes
      """

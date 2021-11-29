@@ -67,6 +67,11 @@ def viewNotes(user_id, id):
 @myapp_obj.route("/note2pdf/<int:id>", methods = ['GET', 'POST'])
 @login_required
 def note2pdf(id):
+    '''(not functional) route will allow for html note to be downloaded as pdf '''
+    note = Notes.query.filter_by(id=id).first()
+    data = BytesIO(note.data).read()
+    return render_template('pdfrender.html', title='Note', user_id=user_id, id=id, data=data)
+s
 
 
 

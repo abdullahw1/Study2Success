@@ -75,7 +75,22 @@ def note2pdf(id):
 @myapp_obj.route("/share_notes/<int:user_id>/<int:id>", methods = ['GET', 'POST'])
 @login_required
 def shareNote(user_id, id):
-
+    '''(not functional) route will allow user to share note to other users(friends)'''
+    note = Notes.query.filter_by(id=id).first()
+    friends = []
+    for status, oth_user in get_all_friends(current_user.get_id()):
+        if status == 'friend':  # Only find friends
+            friends.append(oth_user)
+    form = NoteShareForm()
+    form.dropdown.choices = [(u.id, u.username) for u in friends]
+    if form.validate_on_submit():
+        user = User.query.filter_by(id=form.dropdown.data).one()
+        shared_note = NoteShareForm(id=id, owner_user_id=current_user.get_id(), target_user_id=user.id)
+        db.session.add(shared_note)
+        db.session.commit()
+        flash(f'Shared note(#{id}) to "{user.username}" on {str(now)}')
+        return redirect(f'/note/{user_id}')
+    return render_template("share-notes.html", note=note, form=form, user_id=user_id)
 
 
 

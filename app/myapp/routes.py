@@ -154,15 +154,13 @@ def download_flashcard_as_pdf():
         abort(404, description="No flashcards found, cannot download as pdf")
     # Generate markdown content
     cards = []
-    for idx, card in enumerate(ordered_cards): # Generate a MermaidNode for each card
+    for idx, card in enumerate(ordered_cards): # Generate a markdown card for each card
         cards.append(f'\n---\n\n**{card.front}**\n\n?\n\n{card.back}\n\n---\n\n')
     cards_text = '\n'.join(cards)
     md_text = '## Flashcards\n\n' + cards_text
     print(md_text)
     # Covert to html
-    html = markdown.markdown(md_text, extensions=['md_mermaid'])
-    # Append mermaid js location, TODO: make this static
-    html += '\n<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>\n'
+    html = markdown.markdown(md_text)
     with tempfile.TemporaryDirectory() as temp_dir:
         pdf_filename = os.path.join(temp_dir, 'flashcards.pdf')
         # Convert html to pdf

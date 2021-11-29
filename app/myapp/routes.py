@@ -60,6 +60,9 @@ def note(user_id):
 @login_required
 def viewNotes(user_id, id):
     '''(not functional) route will allow for file to be opened and viewed in html '''
-    
+    note = Notes.query.filter_by(id=id).first()
+    data = BytesIO(note.data).read()
+    return render_template('view_note.html', title='Note', user_id=user_id, id=id, data=data)
+
 
 

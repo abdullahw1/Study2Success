@@ -151,21 +151,3 @@ def learn_flashcard():
     form.D.label.text = choice[3].back
     return render_template("learn-flashcard.html", first_card=first_card, form=form, formNext=formNext, choice=choice, list_id=list_id)
 
-
-# @myapp_obj.route("/learn-flashcard/<int:list_id>", methods=['GET', 'POST'])
-# @login_required
-# def isRightAnswer(list_id):
-#     if first_card.id == list_id:
-#         flash("Excellent")
-#         # FlashCard.query.get(first_card.id).learned = FlashCard.query.get(first_card.id).learned + 1
-#         # first_card.learned = first_card.learned + 1
-#         # flash(f'{first_card.id}')
-#         # flash(f'{first_card.learned}')
-#         FlashCard.query.get(first_card.id).learned+=1
-#         db.session.commit()
-#         flash(f'{FlashCard.query.get(first_card.id).learned}')
-#     else:
-#         flash("Opps. Wrong answer")
-#         pass
-#     return redirect(url_for("learn_flashcard"))
-

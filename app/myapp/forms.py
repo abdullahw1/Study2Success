@@ -133,3 +133,25 @@ class RenderMarkdown(FlaskForm):
     """
     pagedown = PageDownField('Enter markdown text')
     submit = SubmitField('Download as pdf')
+    
+class NoteForm(FlaskForm):
+    '''WTForm for upload markdown file to notes page and later converting to pdf
+
+    Attributes:
+        name: note name
+        note: note file
+        submit: Submit field to add card
+    '''
+    name = StringField('name', validators={DataRequired()})
+    note = FileField('file', validators={DataRequired()})
+    submit = SubmitField('submit')
+    
+class NoteShareForm(FlaskForm):
+    """WTForm for user to select which friend to share note
+
+    Attributes:
+        dropdown: Dropdown to select friend's username
+        share: Submit button to share
+    """
+    dropdown = SelectField('Dropdown', coerce=int)
+    share = SubmitField('Share')

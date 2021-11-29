@@ -46,4 +46,14 @@ def log():
 @login_required
 def note(user_id):
     """ Route to view a users notes"""
+    postedNotes = []
+    noteIndex = Notes.query.filter_by(User = user_id).all()
+
+    if noteIndex is not None:
+        for note in noteIndex:
+            postedNotes = postedNotes + [{'Name':f'{note.name}','id':f'{note.id}'}]
+        else:
+            return redirect(url_for("myTodo"))
+    return render_template('note.html', title = 'Notes', noteIndex = postedNotes, user_id = user_id)
+
 

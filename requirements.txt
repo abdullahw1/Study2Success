@@ -8,3 +8,11 @@ ipython-genutils==0.2.0
 SQLAlchemy==1.4.25
 Werkzeug==2.0.1
 WTForms==2.3.3
+Bootstrap-Flask==1.8.0
+Flask-PageDown==0.4.0
+mkdocs==1.2.3
+mkdocstrings==0.16.2
+mkdocs-material==8.0.0
+Markdown==3.3.6
+xhtml2pdf==0.2.5
+

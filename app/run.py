@@ -3,7 +3,7 @@ import threading
 import webbrowser
 from myapp import myapp_obj, db
 
-DEBUG = True
+DEBUG = False
 PORT_NUMBER = 5000
 
 def launch_browser():
@@ -12,7 +12,7 @@ def launch_browser():
 
 # Create *.db file from schema (if doesn't exists)
 db.create_all()
-# Launch webbrowser after 1 seconds
+
 if not DEBUG:
     threading.Timer(1, launch_browser).start()
 # Run flask app server

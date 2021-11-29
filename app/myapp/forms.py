@@ -37,3 +37,13 @@ class NoteForm(FlaskForm):
     name = StringField('name', validators={DataRequired()})
     note = FileField('file', validators={DataRequired()})
     submit = SubmitField('submit')
+    
+class NoteShareForm(FlaskForm):
+    """WTForm for user to select which friend to share note
+
+    Attributes:
+        dropdown: Dropdown to select friend's username
+        share: Submit button to share
+    """
+    dropdown = SelectField('Dropdown', coerce=int)
+    share = SubmitField('Share')

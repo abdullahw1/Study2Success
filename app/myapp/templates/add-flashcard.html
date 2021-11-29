@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<h1>Add FlashCard</h1>
 <form method="POST" novalidate>
     {{ form.hidden_tag()}}
     <p> {{ form.front.label }} <br>
@@ -22,4 +23,5 @@
 
     <p>{{ form.add() }}</p>
 </form>
+<a class="btn btn-outline-primary" href="/my-flashcards">Back</a>
 {% endblock %}

@@ -1,19 +1,50 @@
+"""This module holds all the flask routes of our app (all URL paths) 
+and incharge of the frontend for rendering html templates.
+
+The standarn convention of defining a route here is:
+
+```python
+@myapp_obj.route("/my-route")
+def my_route():
+    # Code here
+    return render_template("my_route.html")
+```
+
+Or we could redirect to an existing route using:
+
+```python
+@myapp_obj.route("/my-route1")
+def my_route1():
+    # Code here
+    return redirect(url_for("my_route"))
+```
+
+Detailed flask documentation can be found [here](https://flask.palletsprojects.com/en/2.0.x/api/).
+
+"""
 import random
-from flask import render_template, flash, redirect, url_for, request
+from datetime import datetime
+from flask import render_template, flash, redirect, url_for, request, jsonify, abort
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
-from myapp import myapp_obj
-from myapp.forms import SignupForm, LoginForm, FlashCardForm, NextButton, PreviousButton, ObjectiveForm
-from myapp import db
-from myapp.models import User, FlashCard
+
+from myapp import myapp_obj, db
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm
+from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard
+from myapp.models_methods import get_friend_status, get_all_friends
+from myapp.mdparser import md2flashcard
+
 
 @myapp_obj.route("/")
 def home():
+    """Homepage route"""
     return render_template("homepage.html")
 
-@myapp_obj.route("/signup", methods = ['GET', 'POST'])
+
+@myapp_obj.route("/signup", methods=['GET', 'POST'])
 def signup():
+    """Signup page route"""
     if current_user.is_authenticated:
         return redirect(url_for("log"))
     form = SignupForm()
@@ -25,10 +56,12 @@ def signup():
         flash("Your account has been created. You can now login")
         return redirect(url_for("home"))
 
-    return render_template("signup.html", form = form)
+    return render_template("signup.html", form=form)
+
 
 @myapp_obj.route("/login", methods=['GET', 'POST'])
 def login():
+    """Login page route"""
     if current_user.is_authenticated:
         return redirect(url_for("log"))
     form = LoginForm()
@@ -44,20 +77,26 @@ def login():
             return redirect('/login')
     return render_template("login.html", form=form)
 
+
 @myapp_obj.route("/loggedin")
 @login_required
 def log():
-    return render_template("/loggedin.html")
+    """User logged in route, this redirects to homepage"""
+    return render_template("/homepage.html")
+
 
 @myapp_obj.route("/logout")
 @login_required
 def logout():
+    """User logged out route, this logout the user and redirects to homepage"""
     logout_user()
     return redirect(url_for("home"))
+
 
 @myapp_obj.route("/add-flashcard", methods=['GET', 'POST'])
 @login_required
 def add_flashcard():
+    """Add flashcard page route, allow user to use FlashCardForm to add a new flashcard"""
     form = FlashCardForm()
     if form.validate_on_submit():
         card = FlashCard(front=form.front.data, back=form.back.data, view=0, learned=0, user=current_user._get_current_object())
@@ -67,22 +106,25 @@ def add_flashcard():
         return redirect(url_for("add_flashcard"))
     return render_template("/add-flashcard.html", form=form)
 
-@myapp_obj.route("/my-flashcard")
+
+@myapp_obj.route("/my-flashcards")
 @login_required
 def show_flashcard():
-    # cards = FlashCard.query.filter_by(user_id = current_user.get_id()).all()
+    """My Flashcard route, to show all flashcard of current user by order based on how often user got answer correct"""
     ordered_cards = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned).all()
-    if ordered_cards is None:
+    if not ordered_cards:
         flash("You don't have any flashcards. Please create one")
         return redirect(url_for("add_flashcard"))
-    return render_template("my-flashcard.html", ordered_cards=ordered_cards)
+    return render_template("my-flashcards.html", ordered_cards=ordered_cards)
 
-def shuffle_choices(current_card, cards):
+
+def _shuffle_choices(current_card, cards):
+    """Generate the choices for learn-flashcards feature"""
     numRow = len(cards) # number of flashcards that the current user has
     card_id = current_card.id
-    numbers = list(range(1, numRow + 1)) # list(range(numRow))
-    numbers.remove(card_id) # remove card_id from the list numbers
-    random.shuffle(numbers) # shuffle the list numbers
+    numbers = list(range(1, numRow + 1)) 
+    numbers.remove(card_id) 
+    random.shuffle(numbers)
     lst_id = []
     for i in range (3):
         temp = numbers.pop()
@@ -92,9 +134,28 @@ def shuffle_choices(current_card, cards):
     return lst_id
 
 
+@myapp_obj.route("/import-flashcard", methods=['GET', 'POST'])
+@login_required
+def import_flashcard():
+    """Import Flashcard route, for user to import markdown file into flashcard"""
+    form = UploadMarkdownForm()
+    if form.validate_on_submit():
+        f = form.file.data
+        content = f.stream.read().decode('ascii')
+        for section, flashcards in md2flashcard(content).items(): # TODO: Save flashcard by section
+            for flashcard in flashcards:
+                card = FlashCard(front=flashcard.front, back=flashcard.back, learned=0,  user=current_user._get_current_object())
+                db.session.add(card)
+        db.session.commit()
+        flash(f'Uploaded file {f.filename} into flashcards')
+        return redirect(url_for("show_flashcard"))
+    return render_template("import-flashcard.html", form=form)
+
+
 @myapp_obj.route("/learn-flashcard", methods=['GET', 'POST'])
 @login_required
 def learn_flashcard():
+    """Learn Flashcard route, for user to learn from all it's existing flashcards in My Flashcards"""
     first_card = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned, FlashCard.view).first()
     cards = FlashCard.query.filter_by(user_id=current_user.get_id()).all() # list of cards that the current user has
 
@@ -104,10 +165,8 @@ def learn_flashcard():
     
     form = ObjectiveForm()
     formNext = NextButton()
-    list_id = shuffle_choices(first_card, cards)
+    list_id = _shuffle_choices(first_card, cards)
     choice = [FlashCard.query.get(x) for x in list_id]
-
-
 
     if form.validate_on_submit():
         if form.A.data:
@@ -151,3 +210,247 @@ def learn_flashcard():
     form.D.label.text = choice[3].back
     return render_template("learn-flashcard.html", first_card=first_card, form=form, formNext=formNext, choice=choice, list_id=list_id)
 
+
+@myapp_obj.route("/remove-flashcard/<int:flashcard_id>", methods=['GET', 'POST'])
+@login_required
+def remove_flashcard(flashcard_id):
+    """A route to remove a flashcard from user's MyFlashCard,
+    this will redirect back to My Flashcards after removing the specified card
+    """
+    flashcard = FlashCard.query.filter_by(id=flashcard_id).one_or_none()
+    if flashcard:
+        flash(f'Deleted flashcard front="{flashcard.front}", back="{flashcard.back}"')
+        db.session.delete(flashcard)
+        db.session.commit()
+    return redirect(url_for("show_flashcard"))
+
+
+@myapp_obj.route("/share-flashcard/<int:flashcard_id>", methods=['GET', 'POST'])
+@login_required
+def share_flashcard(flashcard_id):
+    """A route for user to use the ShareFlashCardForm to select which friend they
+    want to share the specified flashcard with.
+    """
+    flashcard = FlashCard.query.filter_by(id=flashcard_id).one_or_none()
+    if not flashcard:
+        abort(404, Description=f'Unable to find flashcard with id {flashcard_id}')
+    friends = []
+    for status, oth_user in get_all_friends(current_user.get_id()):
+        if status == 'friend': # Only find friends
+            friends.append(oth_user)
+    form = ShareFlashCardForm()
+    form.dropdown.choices = [(u.id, u.username) for u in friends]
+    if form.validate_on_submit():
+        user = User.query.filter_by(id=form.dropdown.data).one()
+        now = datetime.now()
+        share_card = SharedFlashCard(flashcard_id=flashcard_id,
+                                    datetime=now,
+                                    owner_user_id=current_user.get_id(),
+                                    target_user_id=user.id)
+        db.session.add(share_card)
+        db.session.commit()
+        flash(f'Shared flashcard(#{flashcard_id}) to "{user.username}" on {str(now)}')
+        return redirect(url_for("show_flashcard"))
+    return render_template("share-flashcard.html", flashcard=flashcard, form=form)
+
+
+@myapp_obj.route("/flashcards-sharing", methods=['GET', 'POST'])
+@login_required
+def flashcards_sharing():
+    """A route for viewing sharing status of flashcards (both shared to others and others shared to me)"""
+    owner_flashcards = SharedFlashCard.query.filter_by(owner_user_id=current_user.get_id()).all()
+    target_flashcards = SharedFlashCard.query.filter_by(target_user_id=current_user.get_id()).all()
+    return render_template("flashcards-sharing.html", owner_flashcards=owner_flashcards, target_flashcards=target_flashcards)
+
+
+@myapp_obj.route("/flashcards-sharing/add-to-myflashcards/<int:sharing_id>", methods=['GET', 'POST'])
+@login_required
+def flashcards_sharing_add_to_myflashcards(sharing_id):
+    """A route for adding shared flashcard that other user shared into My FlashCards"""
+    sharing = SharedFlashCard.query.get(sharing_id)
+    if int(current_user.get_id()) != sharing.owner_user_id and\
+        int(current_user.get_id()) != sharing.target_user_id:
+        abort(404, description='Invalid permission')
+    card = FlashCard(front=sharing.flashcard.front, back=sharing.flashcard.back, learned=0, user=current_user._get_current_object())
+    db.session.add(card)
+    db.session.commit()
+    flash(f'Copied flashcard(#{sharing.flashcard.id}) to "My Flashcards", new flashcard(#{card.id})')
+    return redirect(url_for('flashcards_sharing'))
+
+
+@myapp_obj.route("/flashcards-sharing/cancel-sharing/<int:sharing_id>", methods=['GET', 'POST'])
+@login_required
+def flashcards_sharing_cancel_sharing(sharing_id):
+    """A route for cancelling a flashcard sharing"""
+    sharing = SharedFlashCard.query.get(sharing_id)
+    if int(current_user.get_id()) != sharing.owner_user_id and\
+        int(current_user.get_id()) != sharing.target_user_id:
+        abort(404, description='Invalid permission')
+    flash(f'Sharing of flashcard(#{sharing.flashcard.id}) cancelled')
+    db.session.delete(sharing)
+    db.session.commit()
+    return redirect(url_for('flashcards_sharing'))
+
+
+# Friends
+@myapp_obj.route("/my-friends", methods=['GET', 'POST'])
+@login_required
+def show_friends():
+    """My Friends route for viewing all friends and accepting/rejecting pending friend requests"""
+    # Handle show all friends
+    friends = []
+    for status, oth_user in get_all_friends(current_user.get_id()):
+        if status == 'friend':
+            buttons = [(f'/remove-friend/{oth_user.id}', 'Remove Friend')]
+            print_status = 'Friend'
+        elif status == 'pending-sent-request':
+            buttons = [(f'/remove-friend/{oth_user.id}', 'Unsend')]
+            print_status = 'Sent'
+        elif status == 'pending-to-approve':
+            buttons = [(f'/add-friend/{oth_user.id}', 'Approve'), (f'/remove-friend/{oth_user.id}', 'Reject')]
+            print_status = 'Pending'
+        else:
+            abort(404, f'Unknown status {status}')
+        friends.append((oth_user, print_status, buttons))
+    # Handle Add user
+    found_users = []
+    search_form = SearchForm()
+    if search_form.validate_on_submit():
+        search_str = search_form.text.data
+        result = User.query.filter(User.username.contains(search_str) & (User.id != (current_user.get_id()))).all()
+        for user in result:
+            status, _ = get_friend_status(current_user.get_id(), user.id)
+            if status == 'friend':
+                buttons = [(f'/remove-friend/{user.id}', 'Remove Friend')]
+            elif status == 'pending-sent-request':
+                buttons = [(f'/remove-friend/{user.id}', 'Unsend')]
+            elif status == 'pending-to-approve':
+                buttons = [(f'/add-friend/{user.id}', 'Approve'), (f'/remove-friend/{user.id}', 'Reject')]
+            elif status == 'neutral':
+                buttons = [(f'/add-friend/{user.id}', 'Add Friend')]
+            else:
+                abort(404, description=f'Unknown status {status}')
+            found_users.append((user.username, buttons))
+    return render_template("my-friends.html", friends=friends, search_form=search_form, found_users=found_users)
+
+
+@myapp_obj.route("/add-friend/<int:user_id>", methods=['GET', 'POST'])
+@login_required
+def add_friend_userid_provided(user_id):
+    """A route for handling an add friend request, this will redirect back to MyFriends page"""
+    # Abort if adding self as friend
+    if int(current_user.get_id()) == user_id:
+        return abort(404, description="Cannot add yourself as friend")
+    status, friend_record = get_friend_status(current_user.get_id(), user_id)
+    if status == 'friend':
+        # Already a friend, do nothing
+        pass
+    elif status == 'pending-sent-request':
+        # Current user sent a request, do nothing
+        flash(f'Friend request already sent to "{friend_record.user2.username}"')
+    elif status == 'pending-to-approve':
+        # Other user sent the request, approve (Change status from pending to approved)
+        friend_record.status = FriendStatusEnum.FRIEND
+        db.session.add(friend_record)
+        db.session.commit()
+        flash(f'Approved friend request from "{friend_record.user1.username}"')
+    elif status == 'neutral':
+        # No friendship record found, send friend request
+        user = User.query.filter_by(id=user_id).one()
+        friend = Friend(user1_id=current_user.get_id(), user2_id=user.id, status=FriendStatusEnum.PENDING)
+        db.session.add(friend)
+        db.session.commit()
+        flash(f'Sent friend request to "{user.username}"')
+    else:
+        abort(404, description=f"Unknown status {status}")
+    return redirect(url_for("show_friends"))
+
+
+@myapp_obj.route("/remove-friend/<int:user_id>", methods=['GET', 'POST'])
+@login_required
+def remove_friend_userid_provided(user_id):
+    """A route for handling cancel sent friend request and reject freind request,
+    this will then redirect back to MyFriends page
+    """
+    # Abort if removing self as friend
+    if int(current_user.get_id()) == user_id:
+        return abort(404, description="Cannot remove yourself from friend")
+    status, friend_record = get_friend_status(current_user.get_id(), user_id)
+    if friend_record:
+        other_user = friend_record.user1.username if friend_record.user1.id != int(current_user.get_id()) else friend_record.user2.username
+        if status == 'friend':
+            flash(f'Removed "{other_user}" from friend')
+        elif status == 'pending-sent-request':
+            flash(f'Unsent friend request to "{other_user}"')
+        elif status == 'pending-to-approve':
+            flash(f'Rejected friend request from "{other_user}"')
+        elif status == 'neutral':
+            pass # Do nothing
+        else:
+            abort(404, description=f'Unknown status {status}')
+        db.session.delete(friend_record)
+        db.session.commit()
+    return redirect(url_for("show_friends"))
+
+
+#Pomodoro app
+@myapp_obj.route("/pomodoro")
+def tomato():
+    """Show Pomodoro timer route"""
+    return render_template("/pomodoro.html")
+
+
+# Todo app
+@myapp_obj.route("/todo")
+def myTodo():
+    """Show ToDo list route"""
+    todo_list = Todo.query.all()
+    return render_template("todo.html", todo_list=todo_list)
+
+
+@myapp_obj.route("/addTodo", methods=["POST"])
+def addTodo():
+    """Add ToDo item into ToDo list, then redirect back to show ToDo list"""
+    title = request.form.get("title")
+    new_todo = Todo(title=title, complete=False)
+    db.session.add(new_todo)
+    db.session.commit()
+    return redirect(url_for("myTodo"))
+
+
+@myapp_obj.route("/updateTodo/<int:todo_id>")
+def updateTodo(todo_id):
+    """Mark ToDo item to complete/not complete, then redirect back to show ToDo list"""
+    todo = Todo.query.filter_by(id=todo_id).first()
+    todo.complete = not todo.complete
+    db.session.commit()
+    return redirect(url_for("myTodo"))
+
+
+@myapp_obj.route("/deleteTodo/<int:todo_id>")
+def deleteTodo(todo_id):
+    """Remove ToDo item from ToDo list, then redirect back to show ToDo list"""
+    todo = Todo.query.filter_by(id=todo_id).first()
+    db.session.delete(todo)
+    db.session.commit()
+    return redirect(url_for("myTodo"))
+
+
+@myapp_obj.errorhandler(404)
+def page_not_found(e):
+    """Handler error404 and print out description of error"""
+    return jsonify(error=str(e)), 404
+
+myapp_obj.register_error_handler(404, page_not_found)
+
+@myapp_obj.route("/render", methods = ['GET', 'POST'])
+@login_required
+def render():
+    """Route for user to render markdwon notes"""
+    form = RenderMarkdown()
+    text = None
+    if form.validate_on_submit():
+        text = form.pagedown.data
+    else:
+        form.pagedown.data = ('Enter Markdown ')
+        return render_template('upload_md.html', form=form, text=text)

@@ -1,0 +1,3 @@
+# routes.py
+
+::: myapp.routes

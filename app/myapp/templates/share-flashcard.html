@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Share Flashcard</h1>
+<br>
+<hr>
+<p>
+    <b>{{ flashcard.front }}</b> <br>
+    {{ flashcard.back }}
+</p>
+<hr>
+
+<form method="POST" novalidate>
+    {{ form.hidden_tag()}}
+    <p>
+        Choose friend to share: <br>
+        {{ form.dropdown }}
+        {{ form.share() }}
+    </p>
+</form>
+
+{% endblock %}

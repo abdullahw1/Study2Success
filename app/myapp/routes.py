@@ -35,8 +35,8 @@ from xhtml2pdf import pisa
 
 
 from myapp import myapp_obj, db
-from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm
-from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm, NoteForm, NoteShareForm
+from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Notes, ShareNotes
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
 

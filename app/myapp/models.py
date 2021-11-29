@@ -166,7 +166,6 @@ class ShareNotes(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     datetime = db.Column(db.DateTime)
-    note_id = db.Column(db.Integer, db.ForeignKey('flash_card.id'))
     owner_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     owner_user = db.relationship('User', foreign_keys=[owner_user_id])

@@ -25,3 +25,15 @@ class LoginForm(FlaskForm):
     password = PasswordField('PASSWORD')
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Sign in')
+    
+class NoteForm(FlaskForm):
+    '''WTForm for upload markdown file to notes page and later converting to pdf
+
+    Attributes:
+        name: note name
+        note: note file
+        submit: Submit field to add card
+    '''
+    name = StringField('name', validators={DataRequired()})
+    note = FileField('file', validators={DataRequired()})
+    submit = SubmitField('submit')

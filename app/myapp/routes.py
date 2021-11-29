@@ -56,4 +56,8 @@ def note(user_id):
             return redirect(url_for("myTodo"))
     return render_template('note.html', title = 'Notes', noteIndex = postedNotes, user_id = user_id)
 
+@myapp_obj.route("/viewNote/<int:user_id>/<int:id>", methods = ['GET', 'POST'])
+@login_required
+def viewNotes(user_id, id):
+
 

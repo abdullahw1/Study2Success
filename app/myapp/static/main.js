@@ -1,5 +1,5 @@
 // Set variables
-var minuteTimer = 5;
+var minuteTimer = 25;
 var secondTimer = "00";
 
 // Starting template for the timer
@@ -10,7 +10,7 @@ function timerTemplate() {
 
 function timerStart() {
   // Start the time with 5 mins
-  minuteTimer = 4;
+  minuteTimer = 24;
   secondTimer = 59;
 
   // Add minute & second to the page

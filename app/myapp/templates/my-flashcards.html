@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block swiper %}
+<link rel="stylesheet" href="../static/swiper@7/swiper-bundle.min.css" />
+<link rel="stylesheet" href="../static/my-flashcards-style.css" />
+<script src="../static/swiper@7/swiper-bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1>My FlashCards</h1>
+<br>
+<a class="btn btn-outline-primary" href="add-flashcard">Create</a>
+<a class="btn btn-outline-primary" href='import-flashcard'>Import</a>
+<a class="btn btn-outline-primary" href="learn-flashcard">Learn</a>
+<a class="btn btn-outline-primary" href="download-flashcard-as-pdf">Download As PDF</a>
+<br>
+<br>
+
+
+<!-- Slider main container -->
+<div class="swiper" id="swiper-container">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+        <!-- Slides -->
+        {% for card in ordered_cards %}
+        <div class="swiper-slide">
+            <div><b>
+                    <div class="front-card">{{card.front}}</div>
+                </b>
+                <div></div>
+                <div></div>
+                <div class="back-card">{{card.back}}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- If we need navigation buttons -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+</div>
+
+
+
+<br>
+<br>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Flashcard</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for card in ordered_cards %}
+        <tr>
+            <th scope="row">{{ card.id }}</th>
+            <td>
+                <p>
+                    <b>{{ card.front}}</b>
+                    <br>
+                    {{ card.back}}
+                </p>
+            </td>
+            <td>
+                <a class="btn btn-outline-primary" href="remove-flashcard/{{ card.id }}">Remove</a>
+                <a class="btn btn-outline-primary" href="share-flashcard/{{ card.id }}">Share</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<script>
+    const swiper = new Swiper('.swiper', {
+        // Navigation arrows
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+
+    });</script>
+{% endblock %}

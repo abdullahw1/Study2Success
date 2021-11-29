@@ -23,6 +23,7 @@
       - [1.  Create time blocks](#1--create-time-blocks)
       - [2. Use pomodoro timer](#2-use-pomodoro-timer)
       - [3. Add todo tracker](#3-add-todo-tracker)
+      - [4. Track hours worked per day](#4-track-hours-worked-per-day)
 
 ## Description
 - Date: 09/21/2021

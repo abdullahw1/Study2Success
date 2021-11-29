@@ -1,6 +1,6 @@
 """This modules holds a list of `Class` that each representing the database table/model.
 
-The standarn convention of defining a table here is:
+The standard convention of defining a table here is:
 
 ```python
 class MyTable(db.Model):

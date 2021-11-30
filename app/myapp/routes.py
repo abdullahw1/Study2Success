@@ -32,11 +32,13 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, a
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 from xhtml2pdf import pisa
+import pdfkit
+from werkzeug.utils import secure_filename
 
 
 from myapp import myapp_obj, db
-from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm
-from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard
+from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm, NoteForm, NoteShareForm
+from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Notes, ShareNotes
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
 
@@ -512,11 +514,24 @@ def viewNotes(user_id, id):
 
 @myapp_obj.route("/note2pdf/<int:id>", methods = ['GET', 'POST'])
 @login_required
-def note2pdf(id):
-    '''(not functional) route will allow for html note to be downloaded as pdf '''
-    note = Notes.query.filter_by(id=id).first()
-    data = BytesIO(note.data).read()
-    return render_template('pdfrender.html', title='Note', user_id=user_id, id=id, data=data)
+def md_to_pdf():
+    '''(not functional) route will allow for html note to be downloaded as pdf in the md file in a pdf directory'''
+    form = UploadMarkdownForm()
+    if form.validate_on_submit():
+        filename = secure_filename(form.file.data.filename)
+        form.file.data.save("app/myapp/pdf/" + filename)
+        input_filename = 'app/myapp/pdf/' + filename
+        output_filename = input_filename.split(".md")
+        output_filename = output_filename[0] + '.pdf'
+
+        # convert md file to pdf file
+        with open(input_filename, 'r') as f:
+            html_text = markdown(f.read(), output_format='html4')
+        pdfkit.from_string(html_text, output_filename)
+        return render_template('pdfrender.html', form=form, pdf=output_filename)
+
+    return render_template('pdfrender.html', form=form)
+
 
 @myapp_obj.route("/share_notes/<int:user_id>/<int:id>", methods = ['GET', 'POST'])
 @login_required
@@ -537,6 +552,26 @@ def shareNote(user_id, id):
         flash(f'Shared note(#{id}) to "{user.username}" on {str(now)}')
         return redirect(f'/note/{user_id}')
     return render_template("share-notes.html", note=note, form=form, user_id=user_id)
+
+
+@myapp_obj.route("/import-note", methods=['GET', 'POST'])
+@login_required
+def import_note():
+    """(not functional)Import note route, for user to import markdown file into note"""
+    form = UploadMarkdownForm()
+    if form.validate_on_submit():
+        n = form.file.data
+        content = n.stream.read().decode('ascii')
+        for grp, upnotes in md2flashcard(content).items(): # TODO: Save flashcard by section
+            for files in upnotes:
+                flupload = Notes(user=current_user._get_current_object())
+                db.session.add(flupload)
+        db.session.commit()
+        flash(f'Uploaded file {n.filename} ')
+        return redirect(url_for("show_notes"))
+    return render_template("import-note.html", form=form)
+
+
 
 
 

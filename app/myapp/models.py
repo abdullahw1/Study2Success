@@ -61,6 +61,8 @@ class User(UserMixin, db.Model):
     flashcards = db.relationship('FlashCard', backref='user' , lazy='dynamic')
     friends1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
     friends2 = db.relationship('Friend', backref='user2' , lazy='dynamic', foreign_keys=[Friend.user2_id])
+    #note = db.relationship('Note', backref='user')
+
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -140,7 +142,7 @@ class Notes(db.Model):
 
      Attributes:
          id: Primary key
-         title: String column, title of note
+         name: String column, title of note
          data: text column, containing files data
          User: id if user who added notes
      """
@@ -148,6 +150,24 @@ class Notes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     data = db.Column(db.Text)
-    User = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self):
         return f'<{self.name}   {self.data}>'
+    
+class ShareNotes(db.Model):
+    """Saves sharing information of notes
+
+    Attributes:
+        id: Primary key
+        datetime: Datetime column, time of sharing
+        note_id: Integer column, id of note that is shared
+        owner_user_id: Integer column, id of person sharing the note
+        target_user_id: Integer column, id of person that was shared with the note
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    datetime = db.Column(db.DateTime)
+    owner_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner_user = db.relationship('User', foreign_keys=[owner_user_id])
+    target_user = db.relationship('User', foreign_keys=[target_user_id])
+

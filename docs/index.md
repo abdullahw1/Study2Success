@@ -50,20 +50,7 @@ when using the created account. To set up a server, please follow the instructio
 |   ├── myapp              
 |   |   ├── static                              # CSS stylesheets, images, and javascript files needed for the app
 |   |   ├── templates                           # contains all html files
-|   |   |   ├── add-flashcard.html
-|   |   |   ├── base.html
-|   |   |   ├── flashcards-sharing.html
-|   |   |   ├── homepage.html
-|   |   |   ├── import-flashcard.html
-|   |   |   ├── learn-flashcard.html
-|   |   |   ├── login.html
-|   |   |   ├── my-flashcards.html
-|   |   |   ├── my-friends.html
-|   |   |   ├── pomodoro.html
-|   |   |   ├── share-flashcard.html
-|   |   |   ├── signup.html
-|   |   |   ├── todo.html
-|   |   |   └── upload_md.html
+|   |   |   ├── ...
 |   |   ├── __init__.py                         # Set up flask and import library server
 |   |   ├── forms.py                            # holds the code of all WTForms
 |   |   ├── mdparser.py                         # holds the code helps extract markdown content into a list of Flashcards

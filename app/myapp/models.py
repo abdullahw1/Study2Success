@@ -131,3 +131,39 @@ class SharedFlashCard(db.Model):
     target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     owner_user = db.relationship('User', foreign_keys=[owner_user_id])
     target_user = db.relationship('User', foreign_keys=[target_user_id])
+
+
+class Note(db.Model):
+    """Database table for notes
+
+     Attributes:
+         id: Primary key
+         name: String column, title of note
+         data: text column, containing files data
+         User: id if user who added notes
+     """
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    data = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    def __repr__(self):
+        return f'<{self.name}   {self.data}>'
+
+
+class ShareNote(db.Model):
+    """Saves sharing information of notes
+
+    Attributes:
+        id: Primary key
+        datetime: Datetime column, time of sharing
+        note_id: Integer column, id of note that is shared
+        owner_user_id: Integer column, id of person sharing the note
+        target_user_id: Integer column, id of person that was shared with the note
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    datetime = db.Column(db.DateTime)
+    owner_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner_user = db.relationship('User', foreign_keys=[owner_user_id])
+    target_user = db.relationship('User', foreign_keys=[target_user_id])

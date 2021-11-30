@@ -1,6 +1,7 @@
 # Study2Success
 
 - [Study2Success](#study2success)
+  - [Documentations](#documentations)
   - [Contributors](#contributors)
   - [Specifications](#specifications)
   - [Contributor Instructions](#contributor-instructions)

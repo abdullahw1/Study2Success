@@ -557,7 +557,7 @@ def shareNote(user_id, id):
 @myapp_obj.route("/import-note", methods=['GET', 'POST'])
 @login_required
 def import_note():
-    """Import note route, for user to import markdown file into note"""
+    """(not functional)Import note route, for user to import markdown file into note"""
     form = UploadMarkdownForm()
     if form.validate_on_submit():
         n = form.file.data

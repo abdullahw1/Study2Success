@@ -40,37 +40,24 @@ Recommended to read the below carefully before contributing to this project. Fee
 
 ### Understanding directory structure
 ```
-  .
-  ├── app                                         # Source code for applications
-  |   ├── myapp              
-  |   |   ├── static                              # CSS stylesheets, images, and javascript files needed for the app
-  |   |   ├── templates                           # contains all html files
-  |   |   |   ├── add-flashcard.html
-  |   |   |   ├── base.html
-  |   |   |   ├── flashcards-sharing.html
-  |   |   |   ├── homepage.html
-  |   |   |   ├── import-flashcard.html
-  |   |   |   ├── learn-flashcard.html
-  |   |   |   ├── login.html
-  |   |   |   ├── my-flashcards.html
-  |   |   |   ├── my-friends.html
-  |   |   |   ├── pomodoro.html
-  |   |   |   ├── share-flashcard.html
-  |   |   |   ├── signup.html
-  |   |   |   ├── todo.html
-  |   |   |   └── upload_md.html
-  |   |   ├── __init__.py                         # Set up flask and import library server
-  |   |   ├── forms.py                            # holds the code of all WTForms
-  |   |   ├── mdparser.py                         # holds the code helps extract markdown content into a list of Flashcards
-  |   |   ├── models.py                           # holds a list of Class that each representing the database table
-  |   |   ├── models_enum.py                      # Enum representing friend status in database
-  |   |   ├── models_methods.py                   # Functions returning all friends of a specified user
-  |   |   └── routes.py                           # hods all the routes of the app
-  |   └── run.py
-  ├── docs                                        # Documentation folder (also used by [mkdocs](https://www.mkdocs.org) 
-  ├── etc                                         # Contains all example files upload
-  ├── mkdocs.yml                                  # Configuration file for mkdocs
-  └── requirements.txt                            # Dependency python packages
+.
+├── app                                         # Source code for applications
+|   ├── myapp              
+|   |   ├── static                              # CSS stylesheets, images, and javascript files needed for the app
+|   |   ├── templates                           # contains all html files
+|   |   |   ├── ...
+|   |   ├── __init__.py                         # Set up flask and import library server
+|   |   ├── forms.py                            # holds the code of all WTForms
+|   |   ├── mdparser.py                         # holds the code helps extract markdown content into a list of Flashcards
+|   |   ├── models.py                           # holds a list of Class that each representing the database table
+|   |   ├── models_enum.py                      # Enum representing friend status in database
+|   |   ├── models_methods.py                   # Functions returning all friends of a specified user
+|   |   └── routes.py                           # hods all the routes of the app
+|   └── run.py
+├── docs                                        # Documentation folder (also used by [mkdocs](https://www.mkdocs.org) 
+├── etc                                         # Contains all example files upload
+├── mkdocs.yml                                  # Configuration file for mkdocs
+└── requirements.txt                            # Dependency python packages
 ```
 
 ### Github flow

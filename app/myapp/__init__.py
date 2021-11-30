@@ -25,6 +25,8 @@ db = SQLAlchemy(myapp_obj)
 # Install LoginManager
 login = LoginManager(myapp_obj)
 login.login_view = 'login'
+pagedown = PageDown(myapp_obj)
+
 
 pagedown = PageDown(myapp_obj)
 

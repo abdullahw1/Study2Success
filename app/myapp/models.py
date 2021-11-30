@@ -61,7 +61,7 @@ class User(UserMixin, db.Model):
     flashcards = db.relationship('FlashCard', backref='user' , lazy='dynamic')
     friends1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
     friends2 = db.relationship('Friend', backref='user2' , lazy='dynamic', foreign_keys=[Friend.user2_id])
-    note = db.relationship('Note', backref='user')
+    #note = db.relationship('Note', backref='user')
 
 
     def set_password(self, password):
@@ -150,7 +150,7 @@ class Notes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     data = db.Column(db.Text)
-    User = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self):
         return f'<{self.name}   {self.data}>'
     

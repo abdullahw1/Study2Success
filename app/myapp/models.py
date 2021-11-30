@@ -1,6 +1,6 @@
 """This modules holds a list of `Class` that each representing the database table/model.
 
-The standarn convention of defining a table here is:
+The standard convention of defining a table here is:
 
 ```python
 class MyTable(db.Model):
@@ -61,8 +61,6 @@ class User(UserMixin, db.Model):
     flashcards = db.relationship('FlashCard', backref='user' , lazy='dynamic')
     friends1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
     friends2 = db.relationship('Friend', backref='user2' , lazy='dynamic', foreign_keys=[Friend.user2_id])
-    #note = db.relationship('Note', backref='user')
-
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -72,7 +70,6 @@ class User(UserMixin, db.Model):
     
     def __repr__(self):
         return f'<User {self.id}: {self.username}, {self.password}>'
-  
 
 
 class Todo(db.Model):
@@ -170,4 +167,3 @@ class ShareNote(db.Model):
     target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     owner_user = db.relationship('User', foreign_keys=[owner_user_id])
     target_user = db.relationship('User', foreign_keys=[target_user_id])
-

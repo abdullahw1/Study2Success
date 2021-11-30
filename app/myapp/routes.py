@@ -539,4 +539,24 @@ def shareNote(user_id, id):
     return render_template("share-notes.html", note=note, form=form, user_id=user_id)
 
 
+@myapp_obj.route("/import-note", methods=['GET', 'POST'])
+@login_required
+def import_note():
+    """Import note route, for user to import markdown file into note"""
+    form = UploadMarkdownForm()
+    if form.validate_on_submit():
+        n = form.file.data
+        content = n.stream.read().decode('ascii')
+        for grp, upnotes in md2flashcard(content).items(): # TODO: Save flashcard by section
+            for files in upnotes:
+                flupload = Notes(user=current_user._get_current_object())
+                db.session.add(flupload)
+        db.session.commit()
+        flash(f'Uploaded file {n.filename} ')
+        return redirect(url_for("show_notes"))
+    return render_template("import-note.html", form=form)
+
+
+
+
 

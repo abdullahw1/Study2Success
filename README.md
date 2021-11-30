@@ -39,7 +39,7 @@ Recommended to read the below carefully before contributing to this project. Fee
      - Vscode also support downloading extensions that you can preview your markdown documents.
 
 ### Understanding directory structure
-
+```
   .
   ├── app                                         # Source code for applications
   |   ├── myapp              
@@ -71,6 +71,7 @@ Recommended to read the below carefully before contributing to this project. Fee
   ├── etc                                         # Contains all example files upload
   ├── mkdocs.yml                                  # Configuration file for mkdocs
   └── requirements.txt                            # Dependency python packages
+```
 
 ### Github flow
 When making changes, please create a branch to work on it and file a PR to merge the changes. This really prevents

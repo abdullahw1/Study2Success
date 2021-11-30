@@ -512,11 +512,24 @@ def viewNotes(user_id, id):
 
 @myapp_obj.route("/note2pdf/<int:id>", methods = ['GET', 'POST'])
 @login_required
-def note2pdf(id):
-    '''(not functional) route will allow for html note to be downloaded as pdf '''
-    note = Notes.query.filter_by(id=id).first()
-    data = BytesIO(note.data).read()
-    return render_template('pdfrender.html', title='Note', user_id=user_id, id=id, data=data)
+def md_to_pdf():
+    '''(not functional) route will allow for html note to be downloaded as pdf in the md file in a pdf directory'''
+    form = UploadMarkdownForm()
+    if form.validate_on_submit():
+        filename = secure_filename(form.file.data.filename)
+        form.file.data.save("app/myapp/pdf/" + filename)
+        input_filename = 'app/myapp/pdf/' + filename
+        output_filename = input_filename.split(".md")
+        output_filename = output_filename[0] + '.pdf'
+
+        # convert md file to pdf file
+        with open(input_filename, 'r') as f:
+            html_text = markdown(f.read(), output_format='html4')
+        pdfkit.from_string(html_text, output_filename)
+        return render_template('pdfrender.html', form=form, pdf=output_filename)
+
+    return render_template('pdfrender.html', form=form)
+
 
 @myapp_obj.route("/share_notes/<int:user_id>/<int:id>", methods = ['GET', 'POST'])
 @login_required

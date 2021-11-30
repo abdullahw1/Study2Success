@@ -136,8 +136,7 @@ class SharedFlashCard(db.Model):
     target_user = db.relationship('User', foreign_keys=[target_user_id])
 
 
-   
-class Notes(db.Model):
+class Note(db.Model):
     """Database table for notes
 
      Attributes:
@@ -153,8 +152,9 @@ class Notes(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self):
         return f'<{self.name}   {self.data}>'
-    
-class ShareNotes(db.Model):
+
+
+class ShareNote(db.Model):
     """Saves sharing information of notes
 
     Attributes:

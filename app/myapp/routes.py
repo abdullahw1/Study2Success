@@ -26,6 +26,7 @@ Detailed flask documentation can be found [here](https://flask.palletsprojects.c
 import os
 import tempfile
 import random
+import pathlib
 from datetime import datetime
 import markdown
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort, send_file
@@ -38,7 +39,7 @@ from werkzeug.utils import secure_filename
 
 from myapp import myapp_obj, db
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm, NoteForm, NoteShareForm
-from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Notes, ShareNotes
+from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Note, ShareNote
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
 
@@ -476,9 +477,11 @@ def page_not_found(e):
     """Handler error404 and print out description of error"""
     return jsonify(error=str(e)), 404
 
+
 myapp_obj.register_error_handler(404, page_not_found)
 
-@myapp_obj.route("/render", methods = ['GET', 'POST'])
+
+@myapp_obj.route("/render", methods=['GET', 'POST'])
 @login_required
 def render():
     """Route for user to render markdwon notes"""
@@ -489,55 +492,73 @@ def render():
     else:
         form.pagedown.data = ('Enter Markdown ')
         return render_template('upload_md.html', form=form, text=text)
-    return render_template("/loggedin.html")
-@myapp_obj.route("/note/<int:user_id>", methods = ['GET', 'POST'])
+    return render_template("homepage.html")
+
+
+@myapp_obj.route("/note", methods=['GET', 'POST'])
 @login_required
-def note(user_id):
+def show_notes():
     """ Route to view a users notes"""
-    postedNotes = []
-    noteIndex = Notes.query.filter_by(User = user_id).all()
+    posted_notes = []
+    notes = Note.query.filter_by(user_id=current_user.get_id()).all()
+    for note in notes:
+        posted_notes = posted_notes + [{'name':f'{note.name}','id':f'{note.id}'}]
+    return render_template('note.html', title='Note', posted_notes=posted_notes)
 
-    if noteIndex is not None:
-        for note in noteIndex:
-            postedNotes = postedNotes + [{'Name':f'{note.name}','id':f'{note.id}'}]
-        else:
-            return redirect(url_for("myTodo"))
-    return render_template('note.html', title = 'Notes', noteIndex = postedNotes, user_id = user_id)
 
-@myapp_obj.route("/viewNote/<int:user_id>/<int:id>", methods = ['GET', 'POST'])
+@myapp_obj.route("/viewNote/<int:note_id>", methods=['GET', 'POST'])
 @login_required
-def viewNotes(user_id, id):
-    '''(not functional) route will allow for file to be opened and viewed in html '''
-    note = Notes.query.filter_by(id=id).first()
-    data = BytesIO(note.data).read()
-    return render_template('view_note.html', title='Note', user_id=user_id, id=id, data=data)
+def view_notes(note_id):
+    '''Route to view note, this is similar to show_notes '''
+    posted_notes = []
+    notes = Note.query.filter_by(user_id=current_user.get_id()).all()
+    for note in notes:
+        posted_notes = posted_notes + [{'name':f'{note.name}','id':f'{note.id}'}]
+    note = Note.query.filter_by(id=note_id, user_id=current_user.get_id()).one_or_none()
+    html_text =  markdown.markdown(note.data)
+    return render_template('note.html', title='Note', posted_notes=posted_notes, note=note, html_text=html_text)
 
-@myapp_obj.route("/note2pdf/<int:id>", methods = ['GET', 'POST'])
+
+@myapp_obj.route("/download-note-as-pdf/<int:note_id>", methods=['GET', 'POST'])
 @login_required
-def md_to_pdf():
-    '''(not functional) route will allow for html note to be downloaded as pdf in the md file in a pdf directory'''
+def download_note_as_pdf(note_id):
+    '''Route will allow for html note to be downloaded as pdf in the md file in a pdf directory'''
+    note = Note.query.filter_by(id=note_id, user_id=current_user.get_id()).one_or_none()
+    if not note:
+        abort(404, description=f"Note with id {note_id} doesn't exists")
+    html_text = markdown.markdown(note.data)
+    output_filename = note.name.split(".md")
+    output_filename = output_filename[0] + '.pdf'
+    with tempfile.TemporaryDirectory() as temp_dir:
+        pdf_filename = os.path.join(temp_dir, output_filename)
+        # Convert html to pdf
+        with open(pdf_filename, "wb+") as fp:
+            pisa_status = pisa.CreatePDF(html_text, dest=fp)
+        return send_file(pdf_filename, as_attachment=True)
+
+
+@myapp_obj.route("/upload-note", methods=['GET', 'POST'])
+@login_required
+def upload_note():
+    """Import note route, for user to import markdown file into note"""
     form = UploadMarkdownForm()
     if form.validate_on_submit():
-        filename = secure_filename(form.file.data.filename)
-        form.file.data.save("app/myapp/pdf/" + filename)
-        input_filename = 'app/myapp/pdf/' + filename
-        output_filename = input_filename.split(".md")
-        output_filename = output_filename[0] + '.pdf'
-
-        # convert md file to pdf file
-        with open(input_filename, 'r') as f:
-            html_text = markdown(f.read(), output_format='html4')
-        pdfkit.from_string(html_text, output_filename)
-        return render_template('pdfrender.html', form=form, pdf=output_filename)
-
-    return render_template('pdfrender.html', form=form)
+        n = form.file.data
+        filename = n.filename
+        content = n.stream.read().decode('ascii')
+        note = Note(name=filename, data=content, user_id=current_user.get_id())
+        db.session.add(note)
+        db.session.commit()
+        flash(f'Uploaded note {filename} ')
+        return redirect(url_for("show_notes"))
+    return render_template("import-note.html", form=form)
 
 
-@myapp_obj.route("/share_notes/<int:user_id>/<int:id>", methods = ['GET', 'POST'])
+@myapp_obj.route("/share_notes/<int:user_id>/<int:id>", methods=['GET', 'POST'])
 @login_required
-def shareNote(user_id, id):
+def share_note(user_id, id):
     '''(not functional) route will allow user to share note to other users(friends)'''
-    note = Notes.query.filter_by(id=id).first()
+    note = Note.query.filter_by(id=id).first()
     friends = []
     for status, oth_user in get_all_friends(current_user.get_id()):
         if status == 'friend':  # Only find friends
@@ -552,26 +573,3 @@ def shareNote(user_id, id):
         flash(f'Shared note(#{id}) to "{user.username}" on {str(now)}')
         return redirect(f'/note/{user_id}')
     return render_template("share-notes.html", note=note, form=form, user_id=user_id)
-
-
-@myapp_obj.route("/import-note", methods=['GET', 'POST'])
-@login_required
-def import_note():
-    """(not functional)Import note route, for user to import markdown file into note"""
-    form = UploadMarkdownForm()
-    if form.validate_on_submit():
-        n = form.file.data
-        content = n.stream.read().decode('ascii')
-        for grp, upnotes in md2flashcard(content).items(): # TODO: Save flashcard by section
-            for files in upnotes:
-                flupload = Notes(user=current_user._get_current_object())
-                db.session.add(flupload)
-        db.session.commit()
-        flash(f'Uploaded file {n.filename} ')
-        return redirect(url_for("show_notes"))
-    return render_template("import-note.html", form=form)
-
-
-
-
-

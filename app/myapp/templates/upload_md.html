@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
+
+{% block styles %}
+{{ super() }}
+<style>
+    .flask-pagedown-input {
+    }
+    .flask-pagedown-preview {
+        border: 1px dotted black;
+        background-color: #f0f0f0;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-   <head>
 
 {{ pagedown.include_pagedown() }}
-<style>
-.flask-pagedown-input {
-}
-.flask-pagedown-preview {
-    border: 1px dotted black;
-    background-color: #f0f0f0;
-}
-</style>
-</head>
-<body>
-<center>
+
 <h1>Render Markdown</h1>
     <div style="width: 500px;">
         <form method="POST">
@@ -28,6 +30,6 @@
             <div>{{ form.submit() }}</div>
         </form>
     </div>
-    </center
-</body>
 {% endblock %}
+
+

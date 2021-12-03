@@ -576,4 +576,11 @@ def share_note(user_id, id):
 @myapp_obj.route("/search-notes/", methods=['GET', 'POST'])
 @login_required
 def search_notes():
+    '''Route to search notes by name'''
+    search_text = request.form.get('text')
+    user_id = current_user.get_id()
+    search_form = SearchForm()
+    search_results = Note.query.filter(Note.data.contains(search_text)).all()
+    return render_template('note.html', title='Note', user_id = user_id, search_form=search_form, search_results=search_results)
+
     

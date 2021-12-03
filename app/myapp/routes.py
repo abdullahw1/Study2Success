@@ -572,3 +572,8 @@ def share_note(user_id, id):
         flash(f'Shared note(#{id}) to "{user.username}" on {str(now)}')
         return redirect(f'/note/{user_id}')
     return render_template("share-notes.html", note=note, form=form, user_id=user_id)
+
+@myapp_obj.route("/search-notes/", methods=['GET', 'POST'])
+@login_required
+def search_notes():
+    

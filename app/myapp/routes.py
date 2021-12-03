@@ -512,12 +512,13 @@ def show_notes():
 def view_notes(note_id):
     '''Route to view note, this is similar to show_notes '''
     posted_notes = []
+    user_id = current_user.get_id()
     notes = Note.query.filter_by(user_id=current_user.get_id()).all()
     for note in notes:
         posted_notes = posted_notes + [{'name':f'{note.name}','id':f'{note.id}'}]
     note = Note.query.filter_by(id=note_id, user_id=current_user.get_id()).one_or_none()
     html_text =  markdown.markdown(note.data)
-    return render_template('note.html', title='Note', posted_notes=posted_notes, note=note, html_text=html_text)
+    return render_template('note.html', title='Note', posted_notes=posted_notes, note=note, html_text=html_text, user_id = user_id, search_form = SearchForm())
 
 
 @myapp_obj.route("/download-note-as-pdf/<int:note_id>", methods=['GET', 'POST'])

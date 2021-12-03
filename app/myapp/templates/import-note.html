@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Import Note</h1>
+<form method="POST" enctype="multipart/form-data" novalidate>
+    {{ form.hidden_tag()}}
+    <p>{{ form.file }}</p>
+    <p>{{ form.upload() }}</p>
+    {% for error in form.file.errors %}
+    <li style="color: red;">{{ error }}</li>
+    {% endfor %}
+    <a class="btn btn-outline-primary" href="/notes">Back</a>
+</form>
+{% endblock %}
+p

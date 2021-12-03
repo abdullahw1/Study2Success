@@ -555,11 +555,19 @@ def upload_note():
         return redirect(url_for("show_notes"))
     return render_template("import-note.html", form=form)
 
+# @myapp_obj.route("/notes-sharing", methods=['GET', 'POST'])
+# @login_required
+# def notes_sharing():
+#     """(not functional) A route for viewing sharing status of Notes (both shared to others and others shared to me)"""
+#     owner_notes = ShareNote.query.filter_by(owner_user_id=current_user.get_id()).all()
+#     target_notes = ShareNote.query.filter_by(target_user_id=current_user.get_id()).all()
+#     return render_template("notes-sharing.html")
 
-@myapp_obj.route("/share_notes/<int:user_id>/<int:id>", methods=['GET', 'POST'])
+
+@myapp_obj.route("/share-notes/<int:user_id>/<int:id>", methods=['GET', 'POST'])
 @login_required
 def share_note(user_id, id):
-    '''(not functional) route will allow user to share note to other users(friends)'''
+    ''' route will allow user to share note to other users(friends)'''
     note = Note.query.filter_by(id=id).first()
     friends = []
     for status, oth_user in get_all_friends(current_user.get_id()):
@@ -569,11 +577,12 @@ def share_note(user_id, id):
     form.dropdown.choices = [(u.id, u.username) for u in friends]
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.dropdown.data).one()
-        shared_note = NoteShareForm(id=id, owner_user_id=current_user.get_id(), target_user_id=user.id)
+        now = datetime.now()
+        shared_note = ShareNote(id=id, datetime=now, owner_user_id=current_user.get_id(), target_user_id=user.id)
         db.session.add(shared_note)
         db.session.commit()
-        flash(f'Shared note(#{id}) to "{user.username}" on {str(now)}')
-        return redirect(f'/note/{user_id}')
+        flash(f'Shared note(#{id}) to "{user.username}" on {str(datetime.now())}')
+        return redirect(f'/viewNote/{user_id}')
     return render_template("share-notes.html", note=note, form=form, user_id=user_id)
 
 @myapp_obj.route("/search-notes/", methods=['GET', 'POST'])

@@ -499,10 +499,12 @@ def render():
 def show_notes():
     """ Route to view a users notes"""
     posted_notes = []
+    user_id = current_user.get_id()
     notes = Note.query.filter_by(user_id=current_user.get_id()).all()
+    search_form = SearchForm()
     for note in notes:
         posted_notes = posted_notes + [{'name':f'{note.name}','id':f'{note.id}'}]
-    return render_template('note.html', title='Note', posted_notes=posted_notes)
+    return render_template('note.html', title='Note', posted_notes=posted_notes, user_id = user_id, search_form=search_form)
 
 
 @myapp_obj.route("/viewNote/<int:note_id>", methods=['GET', 'POST'])

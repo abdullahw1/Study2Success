@@ -39,6 +39,17 @@ body {
     display: inline-block;
 }
 
+.snip1217 a:before,
+.snip1217 a:after {
+    height: 3px;
+    position: absolute;
+    content: '';
+    -webkit-transition: all 0.35s ease;
+    transition: all 0.35s ease;
+    background-color: #9b59b6;
+    width: 0;
+}
+
 
 /* Pomodoro app */
 

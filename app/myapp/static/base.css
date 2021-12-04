@@ -111,6 +111,12 @@ body {
     animation: move 3s ease-in-out infinite;
 }
 
+@keyframes move {
+    0% {
+        transform: translate(-30%, 0);
+    }
+}
+
 
 /* Pomodoro app */
 

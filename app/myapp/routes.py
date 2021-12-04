@@ -38,7 +38,7 @@ from werkzeug.utils import secure_filename
 
 from myapp import myapp_obj, db
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm, NoteForm, NoteShareForm
-from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Note, ShareNote
+from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Note, SharedNote
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
 
@@ -564,11 +564,11 @@ def upload_note():
 #     return render_template("notes-sharing.html")
 
 
-@myapp_obj.route("/share-notes/<int:user_id>/<int:id>", methods=['GET', 'POST'])
+@myapp_obj.route("/share-notes/<int:note_id>", methods=['GET', 'POST'])
 @login_required
-def share_note(user_id, id):
+def share_note(note_id):
     ''' route will allow user to share note to other users(friends)'''
-    note = Note.query.filter_by(id=id).first()
+    note = Note.query.filter_by(id=note_id).one_or_none()
     friends = []
     for status, oth_user in get_all_friends(current_user.get_id()):
         if status == 'friend':  # Only find friends
@@ -578,12 +578,161 @@ def share_note(user_id, id):
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.dropdown.data).one()
         now = datetime.now()
-        shared_note = ShareNote(id=id, datetime=now, owner_user_id=current_user.get_id(), target_user_id=user.id)
+        shared_note = SharedNote(note_id=note_id, datetime=now, owner_user_id=current_user.get_id(), target_user_id=user.id)
         db.session.add(shared_note)
         db.session.commit()
         flash(f'Shared note(#{id}) to "{user.username}" on {str(datetime.now())}')
-        return redirect(f'/viewNote/{user_id}')
-    return render_template("share-notes.html", note=note, form=form, user_id=user_id)
+        return redirect(url_for("show_notes"))
+    return render_template("share-notes.html", note=note, form=form)
+
+
+@myapp_obj.route("/notes-sharing", methods=['GET', 'POST'])
+@login_required
+def notes_sharing():
+    """A route for viewing sharing status of notes (both shared to others and others shared to me)"""
+    owner_notes = SharedNote.query.filter_by(owner_user_id=current_user.get_id()).all()
+    target_notes = SharedNote.query.filter_by(target_user_id=current_user.get_id()).all()
+    return render_template("notes-sharing.html", owner_notes=owner_notes, target_notes=target_notes)
+
+
+@myapp_obj.route("/notes-sharing/add-to-mynotes/<int:sharing_id>", methods=['GET', 'POST'])
+@login_required
+def notes_sharing_add_to_mynotes(sharing_id):
+    """A route for adding shared note that other user shared into My Notes"""
+    sharing = SharedNote.query.get(sharing_id)
+    if int(current_user.get_id()) != sharing.owner_user_id and\
+        int(current_user.get_id()) != sharing.target_user_id:
+        abort(404, description='Invalid permission')
+    note = Note(name=sharing.note.name, data=sharing.note.data, user=current_user._get_current_object())
+    db.session.add(note)
+    db.session.commit()
+    flash(f'Copied note(#{sharing.note.id}) to "My Notes", new note(#{note.id})')
+    return redirect(url_for('notes_sharing'))
+
+
+@myapp_obj.route("/notes-sharing/cancel-sharing/<int:sharing_id>", methods=['GET', 'POST'])
+@login_required
+def notes_sharing_cancel_sharing(sharing_id):
+    """A route for cancelling a flashcard sharing"""
+    sharing = SharedNote.query.get(sharing_id)
+    if int(current_user.get_id()) != sharing.owner_user_id and\
+        int(current_user.get_id()) != sharing.target_user_id:
+        abort(404, description='Invalid permission')
+    flash(f'Sharing of note(#{sharing.note.id}) cancelled')
+    db.session.delete(sharing)
+    db.session.commit()
+    return redirect(url_for('notes_sharing'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @myapp_obj.route("/search-notes/", methods=['GET', 'POST'])
 @login_required

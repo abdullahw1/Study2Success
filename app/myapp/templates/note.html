@@ -33,7 +33,7 @@
                     <td>
                         <a class="btn btn-outline-primary" href="/viewNote/{{ note.id }}">View</a>
                         <a class="btn btn-outline-primary" href="/download-note-as-pdf/{{ note.id }}">&#11015; PDF</a>
-                        <a class="btn btn-outline-primary" href="/share-notes/{{ user_id }}/{{ note.id }}">Share </a>
+                        <a class="btn btn-outline-primary" href="/share-notes/{{ note.id }}">Share </a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -42,13 +42,13 @@
     </div>
     {% else %}
     <div class="col-12">
-    {% endif %}
+        {% endif %}
 
-</div>
-<br>
-<div class="container-fluid">
-    <div class="row">
-        {% if posted_notes %}
+    </div>
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            {% if posted_notes %}
             <table class="table">
                 <thread>
                     <tr>
@@ -64,8 +64,9 @@
                         </td>
                         <td>
                             <a class="btn btn-outline-primary" href="/viewNote/{{ posted_note.id }}">View</a>
-                            <a class="btn btn-outline-primary" href="/download-note-as-pdf/{{ posted_note.id }}">&#11015; PDF</a>
-                            <a class="btn btn-outline-primary" href="/share-notes/{{ user_id }}/{{ posted_note.id }}">Share </a>
+                            <a class="btn btn-outline-primary"
+                                href="/download-note-as-pdf/{{ posted_note.id }}">&#11015; PDF</a>
+                            <a class="btn btn-outline-primary" href="/share-notes/{{ posted_note.id }}">Share </a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -73,24 +74,24 @@
             </table>
         </div>
         {% else %}
-            <div class="col-12 col-md-9">
-        {% endif %}
-
-        {% if note %}
         <div class="col-12 col-md-9">
-            <h2 style='text-align: center; border: 1px solid;'>{{ note.name }}</h2>
-            <div class='container-fluid' style='background-color:#F2EFFB; border: 1px solid;'>
-                {{ html_text|safe }}
+            {% endif %}
+
+            {% if note %}
+            <div class="col-12 col-md-9">
+                <h2 style='text-align: center; border: 1px solid;'>{{ note.name }}</h2>
+                <div class='container-fluid' style='background-color:#F2EFFB; border: 1px solid;'>
+                    {{ html_text|safe }}
+                </div>
             </div>
+            {% endif %}
         </div>
-        {% endif %}
+
     </div>
 
-</div>
 
 
 
 
 
-
-{% endblock %}
+    {% endblock %}

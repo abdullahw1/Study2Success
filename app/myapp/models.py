@@ -147,11 +147,12 @@ class Note(db.Model):
     name = db.Column(db.String)
     data = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    sharings = db.relationship('SharedNote', backref='note', cascade='all, delete')
     def __repr__(self):
         return f'<{self.name}   {self.data}>'
 
 
-class ShareNote(db.Model):
+class SharedNote(db.Model):
     """Saves sharing information of notes
 
     Attributes:
@@ -163,6 +164,7 @@ class ShareNote(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     datetime = db.Column(db.DateTime)
+    note_id = db.Column(db.Integer, db.ForeignKey('note.id'))
     owner_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     owner_user = db.relationship('User', foreign_keys=[owner_user_id])

@@ -4,8 +4,8 @@
 <br>
 <h2>Notes | Shared With Others</h2>
 <p>
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">Notes</th>
@@ -13,43 +13,42 @@
             <th scope="col">Shared On</th>
             <th scope="col">Actions</th>
         </tr>
-        </thead>
-        <tbody>
-            {% for x in owner_flashcards %}
-            <tr>
-                <th scope="row">{{ x.flashcard.id }}</th>
-                <td>
-                    <p>
-                        <b>{{ x.flashcard.front}}</b>
-                        <br>
-                        {{ x.flashcard.back}}
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        {{ x.target_user.username }}
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        {{ x.datetime.strftime('%Y-%m-%d %H:%M:%S') }}
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        <a class="btn btn-outline-primary" href="/flashcards-sharing/cancel-sharing/{{ x.id }}">Cancel Sharing</a>
-                    </p>
-                </td>
-            </tr>
+    </thead>
+    <tbody>
+        {% for x in owner_notes %}
+        <tr>
+            <th scope="row">{{ x.note.id }}</th>
+            <td>
+                <p>
+                    <b>{{ x.note.name}}</b>
+                </p>
+            </td>
+            <td>
+                <p>
+                    {{ x.target_user.username }}
+                </p>
+            </td>
+            <td>
+                <p>
+                    {{ x.datetime.strftime('%Y-%m-%d %H:%M:%S') }}
+                </p>
+            </td>
+            <td>
+                <p>
+                    <a class="btn btn-outline-primary" href="/notes-sharing/cancel-sharing/{{ x.id }}">Cancel
+                        Sharing</a>
+                </p>
+            </td>
+        </tr>
         {% endfor %}
-        </tbody>
-    </table>
+    </tbody>
+</table>
 </p>
 <hr>
 <h2>Notes | Shared With Me</h2>
 <p>
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">Notes</th>
@@ -57,37 +56,37 @@
             <th scope="col">Shared On</th>
             <th scope="col">Actions</th>
         </tr>
-        </thead>
-        <tbody>
-            {% for x in target_flashcards %}
-            <tr>
-                <th scope="row">{{ x.flashcard.id }}</th>
-                <td>
-                    <p>
-                        <b>{{ x.flashcard.front}}</b>
-                        <br>
-                        {{ x.flashcard.back}}
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        {{ x.owner_user.username }}
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        {{ x.datetime.strftime('%Y-%m-%d %H:%M:%S') }}
-                    </p>
-                </td>
-                <td>
-                    <p>
-                        <a class="btn btn-outline-primary" href="/flashcards-sharing/add-to-myflashcards/{{ x.id }}">Add To My Notes</a>
-                        <a class="btn btn-outline-primary" href="/flashcards-sharing/cancel-sharing/{{ x.id }}">Cancel Sharing</a>
-                    </p>
-                </td>
-            </tr>
+    </thead>
+    <tbody>
+        {% for x in target_notes %}
+        <tr>
+            <th scope="row">{{ x.note.id }}</th>
+            <td>
+                <p>
+                    <b>{{ x.note.name}}</b>
+                </p>
+            </td>
+            <td>
+                <p>
+                    {{ x.owner_user.username }}
+                </p>
+            </td>
+            <td>
+                <p>
+                    {{ x.datetime.strftime('%Y-%m-%d %H:%M:%S') }}
+                </p>
+            </td>
+            <td>
+                <p>
+                    <a class="btn btn-outline-primary" href="/notes-sharing/add-to-mynotes/{{ x.id }}">Add To My
+                        Notes</a>
+                    <a class="btn btn-outline-primary" href="/notes-sharing/cancel-sharing/{{ x.id }}">Cancel
+                        Sharing</a>
+                </p>
+            </td>
+        </tr>
         {% endfor %}
-        </tbody>
-    </table>
+    </tbody>
+</table>
 </p>
 {% endblock %}

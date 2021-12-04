@@ -88,7 +88,6 @@
 .welcome-title {
     margin: 0 auto;
     font-family: "Archivo Black", sans-serif;
-    background: radial-gradient(black, transparent);
     display: flex;
     flex-direction: column;
     height: 400px;
@@ -143,13 +142,6 @@
 
 .words span:nth-child(7) {
     animation-delay: 3s;
-}
-
-
-/* login page */
-
-.sign-in-container {
-    color: hsl(0, 50%, 91%);
 }
 
 

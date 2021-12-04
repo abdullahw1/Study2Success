@@ -118,6 +118,9 @@ body {
     50% {
         text-shadow: 0 25px 50px rgba(0, 0, 0, 0.75);
     }
+    100% {
+        transform: translate(30%, 0);
+    }
 }
 
 

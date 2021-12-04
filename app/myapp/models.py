@@ -58,7 +58,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128), unique=True)
     username = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(64))
-    flashcards = db.relationship('FlashCard', backref='user' , lazy='dynamic')
+    flashcards = db.relationship('FlashCard', backref='user', lazy='dynamic')
+    notes = db.relationship('Note', backref='user', lazy='dynamic')
     friends1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
     friends2 = db.relationship('Friend', backref='user2' , lazy='dynamic', foreign_keys=[Friend.user2_id])
 

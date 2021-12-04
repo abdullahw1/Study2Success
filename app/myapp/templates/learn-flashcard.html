@@ -1,7 +1,12 @@
 {% extends "base.html" %}
+{% block swiper %}
+<link rel="stylesheet" href="../static/learn-flashcards-style.css" />
+{% endblock %}
 {% block content %}
 
-<p> {{ first_card.front}}</p>
+<p><strong>
+        <h2> {{ first_card.front}}</h2>
+    </strong></p>
 <p>Please choose one</p>
 
 <form method="POST" novalidate>
@@ -10,6 +15,6 @@
     <p>{{ form.B() }}</p>
     <p>{{ form.C() }}</p>
     <p>{{ form.D() }}</p>
-    <p>{{ formNext.nextCard() }}</p>
+    <p class="btn btn-outline-primary">{{ formNext.nextCard() }}</p>
 </form>
 {% endblock %}

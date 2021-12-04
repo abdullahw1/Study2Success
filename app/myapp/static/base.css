@@ -89,6 +89,14 @@ body {
     visibility: visible;
 }
 
+.ham-menu>ul>li {
+    font-size: 5rem;
+    white-space: nowrap;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    color: rgb(97, 97, 97);
+}
+
 .full-page-green {
     position: fixed;
     top: 0;

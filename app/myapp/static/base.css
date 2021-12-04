@@ -77,18 +77,6 @@ body {
     padding: 30px 30px;
 }
 
-.menu-line {
-    font-weight: normal;
-    font-family: sans-serif;
-    background-color: var(--home-bg-color);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-flow: column wrap;
-    align-content: center;
-    align-items: center;
-}
-
 #ham-menu:checked~div.ham-menu {
     transform: translate(0px);
     visibility: visible;

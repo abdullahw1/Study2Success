@@ -86,14 +86,6 @@ body {
     background-color: transparent;
 }
 
-.ham-menu>ul {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-around;
-    padding: 20px;
-    height: 50%;
-}
-
 .title {
     font-size: 3rem;
     line-height: 1.5em;

@@ -93,6 +93,10 @@ body {
     font-family: "Archivo Black", sans-serif;
     background: #f4d03f;
     display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
 }
 
 

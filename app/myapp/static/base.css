@@ -60,6 +60,11 @@ body {
     right: 0;
 }
 
+.snip1217 a:hover,
+.snip1217 .current a {
+    color: #ffffff;
+}
+
 
 /* Pomodoro app */
 

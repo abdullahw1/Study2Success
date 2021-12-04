@@ -77,6 +77,10 @@ body {
     padding: 30px 30px;
 }
 
+.snip1217 .my_dropdown a {
+    padding: 10px 10px;
+}
+
 .ham-menu>ul {
     display: flex;
     flex-flow: column nowrap;

@@ -82,6 +82,18 @@ html {
     width: 100%;
 }
 
+.menu-line {
+    display: block;
+    width: 17px;
+    height: 2px;
+    margin: 10px 0 5px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    background-color: var(--border-color);
+    transition: 500ms;
+    transform-origin: right center;
+}
+
 
 /* Pomodoro app */
 

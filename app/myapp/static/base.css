@@ -77,14 +77,6 @@ body {
     padding: 30px 30px;
 }
 
-.ham-menu>ul>li {
-    font-size: 5rem;
-    white-space: nowrap;
-    letter-spacing: 0.15em;
-    cursor: pointer;
-    color: rgb(97, 97, 97);
-}
-
 .ham-menu>ul {
     display: flex;
     flex-flow: column nowrap;

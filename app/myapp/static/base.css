@@ -24,6 +24,13 @@ body {
     transition: all 0.35s ease;
 }
 
+.snip1217 li {
+    display: inline-block;
+    list-style: outside none none;
+    margin: 0.5em 1.5em;
+    padding: 0;
+}
+
 
 /* Pomodoro app */
 

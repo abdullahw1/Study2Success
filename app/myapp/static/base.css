@@ -97,6 +97,14 @@ body {
     color: rgb(97, 97, 97);
 }
 
+.ham-menu>ul {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    padding: 20px;
+    height: 50%;
+}
+
 
 /* Pomodoro app */
 

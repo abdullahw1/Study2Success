@@ -77,11 +77,6 @@ body {
     padding: 30px 30px;
 }
 
-#ham-menu:checked~div.ham-menu {
-    transform: translate(0px);
-    visibility: visible;
-}
-
 .ham-menu>ul>li {
     font-size: 5rem;
     white-space: nowrap;

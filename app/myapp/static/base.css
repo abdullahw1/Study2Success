@@ -89,18 +89,6 @@ body {
     height: 50%;
 }
 
-a {
-    font-size: 1.6rem;
-    line-height: 1.5em;
-    word-spacing: 0.5em;
-    letter-spacing: 0.1em;
-    font-family: "OpenSansCondensed-Light";
-    display: inline;
-    font-weight: bold;
-    padding: 7px;
-    color: var(--icon-hover-bg);
-}
-
 .title {
     font-size: 3rem;
     line-height: 1.5em;

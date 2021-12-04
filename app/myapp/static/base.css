@@ -71,6 +71,9 @@
 .snip1217 .my_dropdown {
     background-color: #26292b;
     padding: 30px 30px;
+    position: absolute;
+    top: 47px;
+    left: -110px;
 }
 
 .snip1217 .my_dropdown a {

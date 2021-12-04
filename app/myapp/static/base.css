@@ -150,6 +150,13 @@ body {
 }
 
 
+/* login page */
+
+.sign-in-container {
+    color: hsl(0, 50%, 91%);
+}
+
+
 /* Pomodoro app */
 
 #pomodoro-content {

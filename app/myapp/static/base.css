@@ -84,6 +84,11 @@ body {
     align-items: center;
 }
 
+#ham-menu:checked~div.ham-menu {
+    transform: translate(0px);
+    visibility: visible;
+}
+
 .full-page-green {
     position: fixed;
     top: 0;

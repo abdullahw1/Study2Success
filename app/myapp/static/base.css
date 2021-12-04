@@ -90,17 +90,19 @@ body {
 /*  */
 
 .welcome-title {
+    margin: 0 auto;
     font-family: "Archivo Black", sans-serif;
-    background: #f4d03f;
+    background: radial-gradient(black, transparent);
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 400px;
+    width: 800px;
     justify-content: center;
     align-items: center;
 }
 
 .words {
-    color: #f4d03f;
+    color: black;
     font-size: 0;
     line-height: 1.5;
 }

@@ -90,11 +90,3 @@
 
 
 /* Pomodoro app */
-
-#pomodoro-content {
-    background-image: url(./images/tomato.jpg);
-    background-position: center center;
-    height: 90vh;
-    background-size: contain;
-    background-repeat: no-repeat;
-}

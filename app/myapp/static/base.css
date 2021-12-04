@@ -87,6 +87,15 @@ body {
 }
 
 
+/*  */
+
+.welcome-title {
+    font-family: "Archivo Black", sans-serif;
+    background: #f4d03f;
+    display: flex;
+}
+
+
 /* Pomodoro app */
 
 #pomodoro-content {

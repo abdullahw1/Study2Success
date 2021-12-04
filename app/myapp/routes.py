@@ -603,7 +603,7 @@ def notes_sharing_add_to_mynotes(sharing_id):
     if int(current_user.get_id()) != sharing.owner_user_id and\
         int(current_user.get_id()) != sharing.target_user_id:
         abort(404, description='Invalid permission')
-    note = Note(name=sharing.note.name, data=sharing.note.data, user=current_user._get_current_object())
+    note = Note(name=sharing.note.name, data=sharing.note.data, user_id=current_user.get_id())
     db.session.add(note)
     db.session.commit()
     flash(f'Copied note(#{sharing.note.id}) to "My Notes", new note(#{note.id})')

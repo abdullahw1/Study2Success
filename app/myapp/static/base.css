@@ -75,6 +75,19 @@ html {
     background-color: var(--home-bg-color);
 }
 
+label {
+    display: block;
+    position: fixed;
+    top: 24px;
+    left: 20px;
+    z-index: 999;
+    width: 60px;
+    height: 60px;
+    background-color: var(--home-bg-color);
+    border-radius: 15px;
+    border: 2px solid var(--border-color);
+}
+
 
 /* Pomodoro app */
 

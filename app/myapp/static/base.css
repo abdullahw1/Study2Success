@@ -85,6 +85,15 @@ body {
     height: 50%;
 }
 
+p {
+    display: inline;
+    font-size: 1.8rem;
+    line-height: 1.5em;
+    word-spacing: 0.5em;
+    letter-spacing: 0.1em;
+    font-family: "OpenSansCondensed-Light";
+}
+
 
 /* Pomodoro app */
 

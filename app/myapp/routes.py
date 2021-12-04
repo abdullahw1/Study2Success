@@ -38,7 +38,7 @@ from werkzeug.utils import secure_filename
 
 from myapp import myapp_obj, db
 from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm, SearchForm, ShareFlashCardForm, RenderMarkdown, NextButton, ObjectiveForm, NoteForm, NoteShareForm
-from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Note, ShareNote
+from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Note, SharedNote
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
 
@@ -499,10 +499,12 @@ def render():
 def show_notes():
     """ Route to view a users notes"""
     posted_notes = []
+    user_id = current_user.get_id()
     notes = Note.query.filter_by(user_id=current_user.get_id()).all()
+    search_form = SearchForm()
     for note in notes:
         posted_notes = posted_notes + [{'name':f'{note.name}','id':f'{note.id}'}]
-    return render_template('note.html', title='Note', posted_notes=posted_notes)
+    return render_template('note.html', title='Note', posted_notes=posted_notes, user_id = user_id, search_form=search_form)
 
 
 @myapp_obj.route("/viewNote/<int:note_id>", methods=['GET', 'POST'])
@@ -510,12 +512,13 @@ def show_notes():
 def view_notes(note_id):
     '''Route to view note, this is similar to show_notes '''
     posted_notes = []
+    user_id = current_user.get_id()
     notes = Note.query.filter_by(user_id=current_user.get_id()).all()
     for note in notes:
         posted_notes = posted_notes + [{'name':f'{note.name}','id':f'{note.id}'}]
     note = Note.query.filter_by(id=note_id, user_id=current_user.get_id()).one_or_none()
     html_text =  markdown.markdown(note.data)
-    return render_template('note.html', title='Note', posted_notes=posted_notes, note=note, html_text=html_text)
+    return render_template('note.html', title='Note', posted_notes=posted_notes, note=note, html_text=html_text, user_id = user_id, search_form = SearchForm())
 
 
 @myapp_obj.route("/download-note-as-pdf/<int:note_id>", methods=['GET', 'POST'])
@@ -552,12 +555,20 @@ def upload_note():
         return redirect(url_for("show_notes"))
     return render_template("import-note.html", form=form)
 
+# @myapp_obj.route("/notes-sharing", methods=['GET', 'POST'])
+# @login_required
+# def notes_sharing():
+#     """(not functional) A route for viewing sharing status of Notes (both shared to others and others shared to me)"""
+#     owner_notes = ShareNote.query.filter_by(owner_user_id=current_user.get_id()).all()
+#     target_notes = ShareNote.query.filter_by(target_user_id=current_user.get_id()).all()
+#     return render_template("notes-sharing.html")
 
-@myapp_obj.route("/share_notes/<int:user_id>/<int:id>", methods=['GET', 'POST'])
+
+@myapp_obj.route("/share-notes/<int:note_id>", methods=['GET', 'POST'])
 @login_required
-def share_note(user_id, id):
-    '''(not functional) route will allow user to share note to other users(friends)'''
-    note = Note.query.filter_by(id=id).first()
+def share_note(note_id):
+    ''' route will allow user to share note to other users(friends)'''
+    note = Note.query.filter_by(id=note_id).one_or_none()
     friends = []
     for status, oth_user in get_all_friends(current_user.get_id()):
         if status == 'friend':  # Only find friends
@@ -566,9 +577,61 @@ def share_note(user_id, id):
     form.dropdown.choices = [(u.id, u.username) for u in friends]
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.dropdown.data).one()
-        shared_note = NoteShareForm(id=id, owner_user_id=current_user.get_id(), target_user_id=user.id)
+        now = datetime.now()
+        shared_note = SharedNote(note_id=note_id, datetime=now, owner_user_id=current_user.get_id(), target_user_id=user.id)
         db.session.add(shared_note)
         db.session.commit()
-        flash(f'Shared note(#{id}) to "{user.username}" on {str(now)}')
-        return redirect(f'/note/{user_id}')
-    return render_template("share-notes.html", note=note, form=form, user_id=user_id)
+        flash(f'Shared note(#{id}) to "{user.username}" on {str(datetime.now())}')
+        return redirect(url_for("show_notes"))
+    return render_template("share-notes.html", note=note, form=form)
+
+
+@myapp_obj.route("/notes-sharing", methods=['GET', 'POST'])
+@login_required
+def notes_sharing():
+    """A route for viewing sharing status of notes (both shared to others and others shared to me)"""
+    owner_notes = SharedNote.query.filter_by(owner_user_id=current_user.get_id()).all()
+    target_notes = SharedNote.query.filter_by(target_user_id=current_user.get_id()).all()
+    return render_template("notes-sharing.html", owner_notes=owner_notes, target_notes=target_notes)
+
+
+@myapp_obj.route("/notes-sharing/add-to-mynotes/<int:sharing_id>", methods=['GET', 'POST'])
+@login_required
+def notes_sharing_add_to_mynotes(sharing_id):
+    """A route for adding shared note that other user shared into My Notes"""
+    sharing = SharedNote.query.get(sharing_id)
+    if int(current_user.get_id()) != sharing.owner_user_id and\
+        int(current_user.get_id()) != sharing.target_user_id:
+        abort(404, description='Invalid permission')
+    note = Note(name=sharing.note.name, data=sharing.note.data, user_id=current_user.get_id())
+    db.session.add(note)
+    db.session.commit()
+    flash(f'Copied note(#{sharing.note.id}) to "My Notes", new note(#{note.id})')
+    return redirect(url_for('notes_sharing'))
+
+
+@myapp_obj.route("/notes-sharing/cancel-sharing/<int:sharing_id>", methods=['GET', 'POST'])
+@login_required
+def notes_sharing_cancel_sharing(sharing_id):
+    """A route for cancelling a flashcard sharing"""
+    sharing = SharedNote.query.get(sharing_id)
+    if int(current_user.get_id()) != sharing.owner_user_id and\
+        int(current_user.get_id()) != sharing.target_user_id:
+        abort(404, description='Invalid permission')
+    flash(f'Sharing of note(#{sharing.note.id}) cancelled')
+    db.session.delete(sharing)
+    db.session.commit()
+    return redirect(url_for('notes_sharing'))
+
+
+@myapp_obj.route("/search-notes/", methods=['GET', 'POST'])
+@login_required
+def search_notes():
+    '''Route to search notes by name'''
+    search_text = request.form.get('text')
+    user_id = current_user.get_id()
+    search_form = SearchForm()
+    search_results = Note.query.filter(Note.data.contains(search_text)).all()
+    return render_template('note.html', title='Note', user_id = user_id, search_form=search_form, search_results=search_results)
+
+    

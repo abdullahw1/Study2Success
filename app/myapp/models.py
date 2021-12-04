@@ -58,7 +58,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128), unique=True)
     username = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(64))
-    flashcards = db.relationship('FlashCard', backref='user' , lazy='dynamic')
+    flashcards = db.relationship('FlashCard', backref='user', lazy='dynamic')
+    notes = db.relationship('Note', backref='user', lazy='dynamic')
     friends1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
     friends2 = db.relationship('Friend', backref='user2' , lazy='dynamic', foreign_keys=[Friend.user2_id])
 
@@ -147,11 +148,12 @@ class Note(db.Model):
     name = db.Column(db.String)
     data = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    sharings = db.relationship('SharedNote', backref='note', cascade='all, delete')
     def __repr__(self):
         return f'<{self.name}   {self.data}>'
 
 
-class ShareNote(db.Model):
+class SharedNote(db.Model):
     """Saves sharing information of notes
 
     Attributes:
@@ -163,6 +165,7 @@ class ShareNote(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     datetime = db.Column(db.DateTime)
+    note_id = db.Column(db.Integer, db.ForeignKey('note.id'))
     owner_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     target_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     owner_user = db.relationship('User', foreign_keys=[owner_user_id])

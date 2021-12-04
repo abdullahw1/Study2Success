@@ -1,0 +1,30 @@
+#A, #B, #C, #D {
+    background-color: white;
+    border-color: #F1E3EE;
+    border-radius:30px;
+    border-width: 3px;
+    width: 70vw;
+    height: 100px;
+}
+
+p, h2 {
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 30px;
+}
+
+#nextCard {
+    background: none;
+    border: none;
+    color: #007bff;
+}
+
+#nextCard:hover{
+    color:white;
+}
+
+.btn-outline-primary{
+    margin-top:20px;
+}

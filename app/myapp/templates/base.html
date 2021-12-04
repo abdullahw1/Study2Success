@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> {% block styles %}
     <!-- Bootstrap CSS -->
     {{ bootstrap.load_css() }}
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='base.css')}}"> {% endblock %} {% block swiper %} {% endblock %}
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='base.css')}}"> {% endblock %} {% block
+    swiper %} {% endblock %}
     <title>
         {% if title %} {{title}} {% else %} S2S {% endif %}
     </title>
@@ -17,11 +18,13 @@
 
 <body>
     {% block nav %}
+
     <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="/">S2S</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="snip1217 navbar-nav mr-auto">
@@ -44,7 +47,16 @@
                 </li>
                 <li class="nav-item"><a class="nav-link" href="/pomodoro">Pomodoro</a></li>
                 <li class="nav-item"><a class="nav-link" href="/todo">ToDo Tracker</a></li>
-                <li class="nav-item"><a class="nav-link" href="/note">Notes</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Notes
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/note">My Notes</a>
+                        <a class="dropdown-item" href="/notes-sharing">Notes Sharing</a>
+                </li>
+
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="/signup">Sign up</a></li>
                 <li class="nav-item"><a class="nav-link" href="/login"> Log In</a></li>

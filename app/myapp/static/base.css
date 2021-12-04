@@ -86,15 +86,6 @@ body {
     background-color: transparent;
 }
 
-a::after {
-    content: "\e806";
-    display: inline-block;
-    font-family: fontello;
-    padding: 5px;
-    font-size: 1.6rem;
-    transform: rotate(-90deg);
-}
-
 
 /* Pomodoro app */
 

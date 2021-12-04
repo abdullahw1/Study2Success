@@ -1,12 +1,24 @@
 {% extends "base.html" %}
+{% block swiper %}
+<link rel="stylesheet" href="../static/homepage-style.css" />
+{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-sm">
-        <img src="../static/images/logan.png">
-    </div>
-    <div class="col-sm">
-        <img src="../static/images/Cover.png">
+<div class="header-container">
+    <div class="wrapper">
+        <header>
+            <div class="logan">
+                <h1>MAKE <br>YOUR STUDY EXPERIENCE BETTER</h1>
+                <p>Learning made easy
+                    <img src="../static/images/stick.svg">
+                </p>
+                <a href="/signup">Get Started</a>
+            </div>
+            <div class="header-image">
+                <img src="../static/images/headpic.svg">
+            </div>
+        </header>
     </div>
 </div>
-<h1>Hello, welcome to Study2Success</h1>
+<!-- <h1>Hello, welcome to Study2Success</h1> -->
 {% endblock %}

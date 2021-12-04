@@ -105,6 +105,12 @@ body {
     line-height: 1.5;
 }
 
+.words span {
+    font-size: 15rem;
+    display: inline-flex;
+    animation: move 5s ease-in-out infinite;
+}
+
 
 /* Pomodoro app */
 

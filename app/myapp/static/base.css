@@ -86,13 +86,6 @@ body {
     background-color: transparent;
 }
 
-.title {
-    font-size: 3rem;
-    line-height: 1.5em;
-    word-spacing: 0.5em;
-    letter-spacing: 0.1em;
-}
-
 a::after {
     content: "\e806";
     display: inline-block;

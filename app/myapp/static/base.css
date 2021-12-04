@@ -127,6 +127,10 @@ body {
     animation-delay: 0.5s;
 }
 
+.words span:nth-child(3) {
+    animation-delay: 1s;
+}
+
 
 /* Pomodoro app */
 

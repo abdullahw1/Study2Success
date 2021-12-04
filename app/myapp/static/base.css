@@ -75,6 +75,13 @@ html {
     background-color: var(--home-bg-color);
 }
 
+.snip1217 a:hover:before,
+.snip1217 .current a:before,
+.snip1217 a:hover:after,
+.snip1217 .current a:after {
+    width: 100%;
+}
+
 
 /* Pomodoro app */
 

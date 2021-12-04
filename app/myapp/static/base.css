@@ -85,6 +85,12 @@ body {
     height: 50%;
 }
 
+a {
+    font-size: 1.6rem;
+    line-height: 1.5em;
+    word-spacing: 0.5em;
+}
+
 p {
     display: inline;
     font-size: 1.8rem;

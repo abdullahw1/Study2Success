@@ -50,6 +50,16 @@ body {
     width: 0;
 }
 
+.snip1217 a:before {
+    top: 0;
+    left: 0;
+}
+
+.snip1217 a:after {
+    bottom: 0;
+    right: 0;
+}
+
 
 /* Pomodoro app */
 

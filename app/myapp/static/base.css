@@ -1,13 +1,5 @@
 /*  */
 
-body {
-    background-image: url(./images/bg.jpg);
-    background-position: center top;
-    background-size: cover;
-    width: 100%;
-    height: 100vh;
-}
-
 @import url(https://fonts.googleapis.com/css?family=Raleway:400,500,800);
 .snip1217 {
     font-family: 'Raleway', Arial, sans-serif;

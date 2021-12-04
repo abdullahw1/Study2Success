@@ -73,6 +73,9 @@ body {
 }
 
 .menu-line {
+    font-weight: normal;
+    font-family: sans-serif;
+    background-color: var(--home-bg-color);
     display: block;
     width: 17px;
     height: 2px;

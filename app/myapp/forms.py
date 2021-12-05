@@ -109,7 +109,7 @@ class SearchForm(FlaskForm):
         text: Search text
         button: Submit button to confirm search
     """
-    text = StringField('Text', validators=[DataRequired()])
+    text = StringField('Text', validators=[])
     button = SubmitField('Search')
 
 

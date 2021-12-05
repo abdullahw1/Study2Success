@@ -127,15 +127,14 @@ def show_flashcard():
 
 def _shuffle_choices(current_card, cards):
     """Generate the choices for learn-flashcards feature"""
-    numRow = len(cards) # number of flashcards that the current user has
     card_id = current_card.id
-    numbers = list(range(1, numRow + 1)) 
+    numbers = [x.id for x in cards]
     numbers.remove(card_id) 
     random.shuffle(numbers)
     lst_id = []
     for i in range (3):
         temp = numbers.pop()
-        lst_id.append(cards[temp-1].id)
+        lst_id.append(temp)
     lst_id.append(card_id)
     random.shuffle(lst_id)
     return lst_id
@@ -498,27 +497,33 @@ def render():
 @login_required
 def show_notes():
     """ Route to view a users notes"""
-    posted_notes = []
-    user_id = current_user.get_id()
-    notes = Note.query.filter_by(user_id=current_user.get_id()).all()
-    search_form = SearchForm()
-    for note in notes:
-        posted_notes = posted_notes + [{'name':f'{note.name}','id':f'{note.id}'}]
-    return render_template('note.html', title='Note', posted_notes=posted_notes, user_id = user_id, search_form=search_form)
+    return redirect(url_for('view_notes', note_id=0)) # note_id 0 indicate no note to view
 
 
 @myapp_obj.route("/viewNote/<int:note_id>", methods=['GET', 'POST'])
 @login_required
 def view_notes(note_id):
     '''Route to view note, this is similar to show_notes '''
+    note = None
+    html_text = None
     posted_notes = []
+    search_text = request.form.get('text')
     user_id = current_user.get_id()
-    notes = Note.query.filter_by(user_id=current_user.get_id()).all()
-    for note in notes:
-        posted_notes = posted_notes + [{'name':f'{note.name}','id':f'{note.id}'}]
-    note = Note.query.filter_by(id=note_id, user_id=current_user.get_id()).one_or_none()
-    html_text =  markdown.markdown(note.data)
-    return render_template('note.html', title='Note', posted_notes=posted_notes, note=note, html_text=html_text, user_id = user_id, search_form = SearchForm())
+    search_form = SearchForm()
+    if search_text:
+        notes = Note.query.filter_by(user_id=current_user.get_id()).filter(Note.data.contains(search_text)).all()
+        if notes:
+            flash(f'{len(notes)} search results found')
+        else:
+            flash('No search results found')
+    else:
+        notes = Note.query.filter_by(user_id=current_user.get_id()).all()
+        if note_id != 0:
+            note = Note.query.filter_by(id=note_id, user_id=current_user.get_id()).one_or_none()
+            html_text =  markdown.markdown(note.data)
+    for x in notes:
+        posted_notes = posted_notes + [{'name':f'{x.name}','id':f'{x.id}'}]
+    return render_template('note.html', title='Note', posted_notes=posted_notes, note=note, html_text=html_text, user_id=user_id, search_form=SearchForm())
 
 
 @myapp_obj.route("/download-note-as-pdf/<int:note_id>", methods=['GET', 'POST'])
@@ -622,16 +627,3 @@ def notes_sharing_cancel_sharing(sharing_id):
     db.session.delete(sharing)
     db.session.commit()
     return redirect(url_for('notes_sharing'))
-
-
-@myapp_obj.route("/search-notes/", methods=['GET', 'POST'])
-@login_required
-def search_notes():
-    '''Route to search notes by name'''
-    search_text = request.form.get('text')
-    user_id = current_user.get_id()
-    search_form = SearchForm()
-    search_results = Note.query.filter(Note.data.contains(search_text)).all()
-    return render_template('note.html', title='Note', user_id = user_id, search_form=search_form, search_results=search_results)
-
-    

@@ -5,20 +5,76 @@
 
 {% block content %}
 <div class="header-container">
-    <div class="wrapper">
-        <header>
-            <div class="logan">
-                <h1>MAKE <br>YOUR STUDY <br>  EXPERIENCE BETTER</h1>
-                <p>Learning made easy
-                    <img src="../static/images/stick.svg">
-                </p>
-                <a href="/signup">Get Started</a>
+    <!-- <div class="wrapper"> -->
+    <div class="bd-masthead mb-3" id="content">
+        <div class="container px-4 px-md-3">
+            <!-- <header> -->
+            <div class="row align-items-lg-center">
+                <div class="container px-4 px-md-3">
+                    <!-- header with logan -->
+                    <div class="row">
+                        <div class="col-md-8 order-md-1 col-lg-5 text-md-start">
+                            <div class="logan">
+                                <h1 class-"mb-3" class="logan-top">MAKE <br>YOUR STUDY <br> EXPERIENCE BETTER</h1>
+                                <!-- <p class="logan-top">MAKE <br>YOUR STUDY <br> EXPERIENCE BETTER</h1> -->
+                                <p class="lead mb-4">Learning made easy
+                                    <img class="logan-stick" src="../static/images/stick.svg">
+                                </p>
+                                <div class="d-flex flex-column flex-md-row">
+                                    <a class="logan-started" href="/signup">Get Started</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-8 mx-auto col-md-4 order-md-2 col-lg-5">
+                            <div class="header-image">
+                                <img class="logan-img" src="../static/images/headpic.svg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="flashcards">
+                                <h2 class="display-5 fw-normal heading">FlashCards</h2>
+                                <p class="lead"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="notes">
+                                <h2 class="display-5 fw-normal heading">Notes</h2>
+                                <p class="lead"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="pomodoro">
+                                <h2 class="display-5 fw-normal heading">Pomodoro Timer</h2>
+                                <p class="lead"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="todo-list">
+                                <h2 class="display-5 fw-normal heading">Todo list</h2>
+                                <p class="lead"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="header-image">
-                <img src="../static/images/headpic.svg">
-            </div>
-        </header>
+            <!--flashcards-->
+            <br>
+
+
+            <!-- </header> -->
+        </div>
     </div>
+
+
 </div>
 <!-- <h1>Hello, welcome to Study2Success</h1> -->
 {% endblock %}

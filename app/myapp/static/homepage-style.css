@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+/* body{
+    font-family: 'Poppins', sans-serif;
+}
+
+img.logan-img {
+    height: 200px;
+}
+
+a.logan-started {
+    text-decoration:none;
+    background-color: #29A7A7;
+    padding: 0.5rem;
+    color: white;
+    border-radius: 10px;
+}
+
+div.flashcard {
+    background-color: #FFE5D9;
+}
+
+@media screen and (min-width: 769px){
+header {
+    align-items: center;
+}
+p.logan-top {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 30px;
+}
+img.logan-img {
+    height: 260px;
+}
+}
+
+@media screen and (min-width: 1024px){
+    header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 120px;
+    margin-right: 120px;
+    margin-top: 100px;
+}
+
+img.logan-stick {
+    height:25px;
+    margin-top:-10px;
+}
+img.logan-img {
+    height: 300px;
+}
+    p.logan-top {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 40px;
+}
+
+a.logan-started {
+    font-family: Montserrat;
+font-style: normal;
+font-weight: bold;
+font-size: 15px;
+line-height: 18px;
+}
+
+}
+
+@media screen and (min-width: 1201px){
+    img.logan-img {
+    height: 300px;
+}
+}
+ */
+
+ body{
+    font-family: 'Poppins', sans-serif;
+}
+
+.h2, h2 {
+    font-size: 2rem;
+    margin: 50px 10px; 
+    padding: 30px 0px;
+}
+
+.flashcards {
+    background-color:#FFE5D9;
+}
+
+.notes {
+    background-color: #F1E3EE;
+}
+
+.pomodoro {
+    background-color: #D8EBE4;
+}
+
+.todo-list {
+    background-color: #B5EAEA;
+}
+
+.pl-md-3, .px-md-3 {
+    padding-left: 0rem!important;
+}
+
+img.logan-stick {
+    height:25px;
+    margin-top:-10px;
+}
+
+a.logan-started {
+    text-decoration: none;
+    background-color: #29A7A7;
+    padding: 0.5rem;
+    color: white;
+    border-radius: 10px;
+}
+
+.flashcard {
+    background-color:#FFE5D9 ;
+}
+
+ @media (min-width: 768px){
+     div.col-8.mx-auto.col-md-4.order-md-2.col-lg-5 {
+         margin-left: 20px !important;
+     }
+ img.logan-img {
+     height: 300px !important;
+ }
+ div.logan {
+     margin-top: 60px;
+ }
+ h1.logan-top {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 50px;
+}
+
+p.lead {
+    font-weight: lighter;
+    font-size: revert;
+}
+
+
+
+.pb-md-4, .py-md-4 {
+    padding-bottom: 1.5rem!important;
+    margin-right: 50px;
+}
+
+.h2.display-5.fw-normal.heading {
+    margin-top:50px;
+}
+
+}

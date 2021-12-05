@@ -21,8 +21,8 @@
             </div>
         </div>
     </div>
+    {{ render_field(form.share, button_style="info") }}
 </form>
-<a class="btn btn-info" href="/note">Back</a>
-{{ render_field(form.share, button_style="info") }}
+<a class="btn btn-info mt-1" href="/note">Back</a>
 
 {% endblock %}

@@ -8,6 +8,6 @@
 #main-container {
     background-image: url(./images/tomato.jpg);
     background-position: center center;
-    background-size: contain;
-    background-repeat: no-repeat;
+    background-size: auto 100%;
+    background-repeat: repeat-x;
 }

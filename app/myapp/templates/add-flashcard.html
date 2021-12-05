@@ -1,27 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Add FlashCard</h1>
-<form method="POST" novalidate>
-    {{ form.hidden_tag()}}
-    <p> {{ form.front.label }} <br>
-        {{ form.front }}</p>
-
-    <ul>
-        {% for error in form.front.errors %}
-        <li style="color: red;">{{ error }}</li>
-        {% endfor %}
-    </ul>
-
-    <p> {{ form.back.label }} <br>
-        {{ form.back }}</p>
-
-    <ul>
-        {% for error in form.back.errors %}
-        <li style="color: red;">{{ error }}</li>
-        {% endfor %}
-    </ul>
-
-    <p>{{ form.add() }}</p>
-</form>
+{% from 'bootstrap/form.html' import render_form %}
+{{ render_form(form, button_style="outline-primary", novalidate=True) }}
+<br>
 <a class="btn btn-outline-primary" href="/my-flashcards">Back</a>
 {% endblock %}

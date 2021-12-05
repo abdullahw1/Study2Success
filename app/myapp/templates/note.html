@@ -6,49 +6,16 @@
 <a class="btn btn-outline-primary" href="/upload-note">Upload From Markdown</a>
 <br>
 <br>
-<form method="POST" action="/search-notes">
-    {{ search_form.hidden_tag()}}
-    <p>
-        {{ search_form.text }}
-        {{ search_form.button() }}
-    </p>
-</form>
+{% from 'bootstrap/form.html' import render_form %}
+{{ render_form(search_form, form_type="inline", novalidate=True) }}
 <br>
-<div class="row">
-    {% if search_results %}
-    <div class="col-12 col-md-3">
-        <table class="table">
-            <thread>
-                <tr>
-                    <th scope="col">Filename</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thread>
-            <tbody>
-                {% for note in search_results %}
-                <tr>
-                    <td>
-                        {{ note.name }}
-                    </td>
-                    <td>
-                        <a class="btn btn-outline-primary" href="/viewNote/{{ note.id }}">View</a>
-                        <a class="btn btn-outline-primary" href="/download-note-as-pdf/{{ note.id }}">&#11015; PDF</a>
-                        <a class="btn btn-outline-primary" href="/share-notes/{{ note.id }}">Share </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <div class="col-12">
+<div class="container-fluid">
+    <div class="row">
+        {% if note %}
+        <div class="col-12 col-md-3">
+        {% else %}
+        <div class="col-12">
         {% endif %}
-
-    </div>
-    <br>
-    <div class="container-fluid">
-        <div class="row">
-            {% if posted_notes %}
             <table class="table">
                 <thread>
                     <tr>
@@ -64,34 +31,26 @@
                         </td>
                         <td>
                             <a class="btn btn-outline-primary" href="/viewNote/{{ posted_note.id }}">View</a>
-                            <a class="btn btn-outline-primary"
-                                href="/download-note-as-pdf/{{ posted_note.id }}">&#11015; PDF</a>
-                            <a class="btn btn-outline-primary" href="/share-notes/{{ posted_note.id }}">Share </a>
+                            <a class="btn btn-outline-primary" href="/download-note-as-pdf/{{ posted_note.id }}">&#11015; PDF</a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        {% else %}
+        {% if note %}
         <div class="col-12 col-md-9">
-            {% endif %}
-
-            {% if note %}
-            <div class="col-12 col-md-9">
-                <h2 style='text-align: center; border: 1px solid;'>{{ note.name }}</h2>
-                <div class='container-fluid' style='background-color:#F2EFFB; border: 1px solid;'>
-                    {{ html_text|safe }}
-                </div>
+            <h2 style='text-align: center; border: 1px solid;'>{{ note.name }}</h2>
+            <div class='container-fluid' style='background-color:#F2EFFB; border: 1px solid;'>
+                {{ html_text|safe }}
             </div>
-            {% endif %}
         </div>
-
+        {% endif %}
     </div>
+</div>
+
+        
 
 
 
-
-
-
-    {% endblock %}
+{% endblock %}

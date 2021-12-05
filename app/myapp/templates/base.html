@@ -18,7 +18,7 @@
 <body>
     {% block nav %}
 
-    <nav id="base-navbar" class="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav id="base-navbar" class="navbar navbar-expand-md navbar-dark bg-primary">
         <a class="navbar-brand" href="/">S2S</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -69,13 +69,26 @@
     <div id="main-container" class="container-fluid">
         <br>
         <div class="container-fluid">
-            {% with messages = get_flashed_messages() %} {% if messages %} {% for m in messages %}
-            <div class="alert alert-primary" role="alert">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, m in messages %}
+            {% if category == 'error' or category == 'danger' %}
+            <div class="alert alert-danger" role="alert">
+            {% elif category == 'warning' %}
+            <div class="alert alert-warning" role="alert">
+            {% elif category == 'success' %}
+            <div class="alert alert-success" role="alert">
+            {% else %}
+            <div class="alert alert-info" role="alert">
+            {% endif %} 
                 {{ m }}
             </div>
             <!-- <li>{{ m }}</li> -->
-            {% endfor %} {% endif %} {% endwith %}
+            {% endfor %}
+            {% endif %} 
+            {% endwith %}
         </div>
+        {% from 'bootstrap/form.html' import render_form, render_form_row, render_field, render_hidden_errors %}
         {% block content %} {% endblock %}
     </div>
 

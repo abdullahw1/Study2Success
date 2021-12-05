@@ -8,36 +8,48 @@
 {% block content %}
 <h1>My FlashCards</h1>
 <br>
-<a class="btn btn-outline-primary" href="add-flashcard">Create</a>
-<a class="btn btn-outline-primary" href='import-flashcard'>Import</a>
-<a class="btn btn-outline-primary" href="learn-flashcard">Learn</a>
-<a class="btn btn-outline-primary" href="download-flashcard-as-pdf">Download As PDF</a>
 <br>
-<br>
-
 
 <!-- Slider main container -->
-<div class="swiper" id="swiper-container">
-    <!-- Additional required wrapper -->
-    <div class="swiper-wrapper">
-        <!-- Slides -->
-        {% for card in ordered_cards %}
-        <div class="swiper-slide">
-            <div><b>
-                    <div class="front-card">{{card.front}}</div>
-                </b>
-                <div></div>
-                <div></div>
-                <div class="back-card">{{card.back}}</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-2 col-lg-1">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group-vertical" role="group" aria-label="Actions For Flashcards">
+                    <a class="btn btn-secondary mb-1" href="add-flashcard">Create</a>
+                    <a class="btn btn-secondary mb-1" href='import-flashcard'>Import</a>
+                    <a class="btn btn-secondary mb-1" href="learn-flashcard">Learn</a>
+                    <a class="btn btn-secondary mb-1" href="download-flashcard-as-pdf">Download As PDF</a>
+                </div>
             </div>
         </div>
-        {% endfor %}
+        <div class="col-10 col-sm-8 col-md-6 col-lg-4">
+            <div class="swiper" id="swiper-container">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    {% for card in ordered_cards %}
+                    <div class="swiper-slide">
+                        <div><b>
+                                <div class="front-card">{{card.front}}</div>
+                            </b>
+                            <div></div>
+                            <div></div>
+                            <div class="back-card">{{card.back}}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
+            </div>
+        </div>
+        <div class="col-lg-4"></div>
     </div>
-
-    <!-- If we need navigation buttons -->
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-
 </div>
 
 
@@ -65,8 +77,8 @@
                 </p>
             </td>
             <td>
-                <a class="btn btn-outline-primary" href="remove-flashcard/{{ card.id }}">Remove</a>
-                <a class="btn btn-outline-primary" href="share-flashcard/{{ card.id }}">Share</a>
+                <a class="btn btn-outline-danger" href="remove-flashcard/{{ card.id }}">Remove</a>
+                <a class="btn btn-outline-info" href="share-flashcard/{{ card.id }}">Share</a>
             </td>
         </tr>
         {% endfor %}

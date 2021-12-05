@@ -6,7 +6,6 @@
 <a class="btn btn-outline-primary" href="/upload-note">Upload From Markdown</a>
 <br>
 <br>
-{% from 'bootstrap/form.html' import render_form %}
 {{ render_form(search_form, form_type="inline", novalidate=True) }}
 <br>
 <div class="container-fluid">
@@ -30,9 +29,9 @@
                             {{ posted_note.name }}
                         </td>
                         <td>
-                            <a class="btn btn-outline-primary" href="/viewNote/{{ posted_note.id }}">View</a>
-                            <a class="btn btn-outline-primary" href="/download-note-as-pdf/{{ posted_note.id }}">&#11015; PDF</a>
-                            <a class="btn btn-outline-primary" href="/share-notes/{{ posted_note.id }}">Share </a>
+                            <a class="btn btn-outline-success" href="/viewNote/{{ posted_note.id }}">View</a>
+                            <a class="btn btn-outline-danger" href="/download-note-as-pdf/{{ posted_note.id }}">&#11015; PDF</a>
+                            <a class="btn btn-outline-info" href="/share-notes/{{ posted_note.id }}">Share </a>
                         </td>
                     </tr>
                     {% endfor %}

@@ -36,25 +36,25 @@
 .flashcards {
     background-color:#FFE5D9;
     border-radius: 5%;
-    height: 100vh;
+    height: 40rem;
 }
 
 .notes {
     background-color: #F1E3EE;
     border-radius: 5%;
-    height: 100vh;
+    height: 40rem;
 }
 
 .pomodoro {
     background-color: #D8EBE4;
     border-radius: 5%;
-    height: 100vh;
+    height: 40rem;
 }
 
 .todo-list {
     background-color: #B5EAEA;
     border-radius: 5%;
-    height: 100vh;
+    height: 40rem;
 }
 
 .pl-md-3, .px-md-3 {
@@ -72,6 +72,14 @@ a.logan-started {
     padding: 0.5rem;
     color: white;
     border-radius: 10px;
+}
+
+img.logan-img {
+    width: 100%;
+}
+
+.swiper-slide .card {
+    min-height: 400px;
 }
 
 .row.justify-content-center {

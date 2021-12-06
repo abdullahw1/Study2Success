@@ -10,7 +10,10 @@ def launch_browser():
 
 
 # Create *.db file from schema (if doesn't exists)
-db.create_all()
+try:
+    db.create_all()
+except:
+    pass
 
 # Disabled autolaunch browser to deploy heroku
 #if not DEBUG:

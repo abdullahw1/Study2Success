@@ -13,7 +13,9 @@ def launch_browser():
 # Create *.db file from schema (if doesn't exists)
 db.create_all()
 
-if not DEBUG:
-    threading.Timer(1, launch_browser).start()
+# Disabled autolaunch browser to deploy heroku
+#if not DEBUG:
+#    threading.Timer(1, launch_browser).start()
+
 # Run flask app server
 myapp_obj.run(debug=DEBUG, port=PORT_NUMBER)

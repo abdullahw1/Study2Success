@@ -33,7 +33,7 @@
                 {% if current_user.is_authenticated %}
                 <li class="nav-item"><a class="nav-link" href="/my-friends">Friends</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         FlashCards
                     </a>
@@ -49,7 +49,7 @@
                 <li class="nav-item"><a class="nav-link" href="/pomodoro">Pomodoro</a></li>
                 <li class="nav-item"><a class="nav-link" href="/todo">ToDo Tracker</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Notes
                     </a>
@@ -61,7 +61,21 @@
             </ul>
             <ul class="snip1217 navbar-nav ml-auto">
                 {% if current_user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link" href="/logout">Log out</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <img src="data:;base64,{{ encode_to_b64(current_user.avatar) }}" alt="MyAvatar" style="height:30px; width:30px;"
+                            class="user-avatar-md rounded-circle mr-2">
+                            <span>
+                                {{ current_user.username }}
+                                {{ myexample }}
+                            </span>
+                    </a>
+                    <div class="my_dropdown dropdown-menu" style="right:0; left:auto;" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/account">Account</a>
+                        <a class="dropdown-item" href="/logout">Log out</a>
+                </li>
+                
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="/signup">Sign up</a></li>
                 <li class="nav-item"><a class="nav-link" href="/login"> Log In</a></li>

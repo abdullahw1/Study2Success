@@ -29,6 +29,7 @@ import random
 import pathlib
 from datetime import datetime
 import markdown
+from base64 import b64encode
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort, send_file
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
@@ -41,6 +42,14 @@ from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm
 from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Note, SharedNote
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+@myapp_obj.context_processor
+def jinja_encode_to_b64():
+    def encode_to_b64(blob):
+        return b64encode(blob).decode("utf-8")
+    return dict(encode_to_b64=encode_to_b64)
 
 
 @myapp_obj.route("/")
@@ -98,6 +107,39 @@ def logout():
     """User logged out route, this logout the user and redirects to homepage"""
     logout_user()
     return redirect(url_for("home"))
+
+
+AVATAR_IMGS = {
+    1: 'images/clipart722174.png',
+    2: 'images/clipart722180.png',
+    3: 'images/clipart1236782.png',
+    4: 'images/clipart1236792.png',
+    5: 'images/clipart1237041.png',
+    6: 'images/clipart1237090.png',
+}
+
+@myapp_obj.route("/account")
+@login_required
+def account():
+    """User's account page, redirect if need to change avatar"""
+
+    return render_template("/account.html", avatars=AVATAR_IMGS)
+
+
+@myapp_obj.route("/change_avatar/<int:avatar_id>")
+@login_required
+def change_avatar(avatar_id):
+    """To switch avatar pictures and more, then redirect back to account"""
+    if avatar_id in AVATAR_IMGS:
+        avatar_path = os.path.join(basedir, f'./static/{AVATAR_IMGS[avatar_id]}')
+        if os.path.exists(avatar_path):
+            user = current_user._get_current_object()
+            with open(avatar_path, 'rb') as fp:
+                user.avatar = fp.read() # Modify avatar blob
+                db.session.commit()
+        else:
+            raise Exception(f"Avatar {avatar_path} doesn't exists")
+    return redirect(url_for("account"))
 
 
 @myapp_obj.route("/add-flashcard", methods=['GET', 'POST'])
@@ -565,14 +607,6 @@ def upload_note():
         flash(f'Uploaded note {filename} ')
         return redirect(url_for("show_notes"))
     return render_template("import-note.html", form=form)
-
-# @myapp_obj.route("/notes-sharing", methods=['GET', 'POST'])
-# @login_required
-# def notes_sharing():
-#     """(not functional) A route for viewing sharing status of Notes (both shared to others and others shared to me)"""
-#     owner_notes = ShareNote.query.filter_by(owner_user_id=current_user.get_id()).all()
-#     target_notes = ShareNote.query.filter_by(target_user_id=current_user.get_id()).all()
-#     return render_template("notes-sharing.html")
 
 
 @myapp_obj.route("/share-notes/<int:note_id>", methods=['GET', 'POST'])

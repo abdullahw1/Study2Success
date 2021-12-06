@@ -42,9 +42,11 @@
                                 <p class="lead mb-4 pl-0">Learning made easy
                                     <img class="logan-stick" src="../static/images/stick.svg">
                                 </p>
+                                {% if not current_user.is_authenticated %}
                                 <div class="d-flex flex-column flex-md-row">
                                     <a class="logan-started" href="/signup">Get Started</a>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-8 mx-auto col-md-4 order-md-2 col-lg-5">
@@ -92,13 +94,10 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Create FlashCard</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Simply add a front and back to create a
+                                                            flashcard</p>
+                                                        <a href="/add-flashcard" class="btn btn-primary">Add
+                                                            Flashcards</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -110,14 +109,11 @@
                                                             alt="Card image cap">
                                                     </div>
                                                     <div class="card-body">
-                                                        <h5 class="card-title">Import Markdown file</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <h5 class="card-title">Import Markdown Flashcards</h5>
+                                                        <p class="card-text">Create your Flashcards set by importing a
+                                                            markdown file </p>
+                                                        <a href="/import-flashcard" class="btn btn-primary">Import
+                                                            Markdown file</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -131,13 +127,12 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Navigate between FlashCards</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Your FlashCard list is showed by order
+                                                            based on how often you answer them right or wrong. Easily
+                                                            navigate between your flashcards using next and previous
+                                                            button</p>
+                                                        <a href="/my-flashcards" class="btn btn-primary">Go To My
+                                                            Flashcards</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -150,13 +145,12 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Learn FlashCards</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Learning feature helps boost your memory
+                                                            and improve your abilities to recall information and
+                                                            understand concepts. Flashcards that are answered less
+                                                            correctly will be shown first</p>
+                                                        <a href="/learn-flashcard" class="btn btn-primary">Learn
+                                                            Flashcards</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -169,13 +163,10 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Download pdf of FlashCards</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Save your Flashcards as pdf file into your
+                                                            computer in just one click</p>
+                                                        <a href="/my-flashcards" class="btn btn-primary">Go To My
+                                                            Flashcards</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -188,13 +179,10 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Share FlashCards with Friends</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Make studying better. Share your Flashcards
+                                                            with your friends</p>
+                                                        <a href="/my-flashcards" class="btn btn-primary">Go To My
+                                                            Flashcards</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -265,14 +253,9 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <p class="lead">Creating your own set of flashcards is simple with our
-                                                flashcards maker
-                                                - Just add a front and back. You can even easily make your markdown file
-                                                into
-                                                flashcards. Once your flashcards set is complete, you can study and
-                                                share it
-                                                with
-                                                your friends</p>
+                                            <p class="lead">Best way to store your thoughts and ideas. Import markdown
+                                                files into notes, share them with others,
+                                                and access them from your computer, phone or tablet</p>
                                         </div>
                                     </div>
                                 </div>
@@ -291,13 +274,9 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Import Markdown file</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Convert your markdown file into notes by
+                                                            click on "upload from markdown" button</p>
+                                                        <a href="/note" class="btn btn-primary">My Notes</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -311,13 +290,9 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Navigate between Notes</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Quickly view and navigate between your
+                                                            notes</p>
+                                                        <a href="/note" class="btn btn-primary">My Notes</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -330,13 +305,11 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Search text in Notes</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Finding text has been easy with "Search
+                                                            text in Notes" feature. Typing the word that you want to
+                                                            search, a list of notes that contains that word will be
+                                                            shown</p>
+                                                        <a href="/note" class="btn btn-primary">My Notes</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -349,13 +322,10 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title">Share Notes with Friends</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <p class="card-text">Easily sharing your ideas with your friends
+                                                            though
+                                                            note sharing</p>
+                                                        <a href="/note" class="btn btn-primary">My Notes</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -367,14 +337,9 @@
                                                             alt="Card image cap">
                                                     </div>
                                                     <div class="card-body">
-                                                        <h5 class="card-title">Download pdf of FlashCards</h5>
-                                                        <p class="card-text">Some quick example text to build on the
-                                                            card
-                                                            title
-                                                            and
-                                                            make
-                                                            up the bulk of the card's content.</p>
-                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                        <h5 class="card-title">Download pdf of Notes</h5>
+                                                        <p class="card-text">Instantly turn your notes into pdf file</p>
+                                                        <a href="/note" class="btn btn-primary">My Notes</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -403,14 +368,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <p class="lead">Creating your own set of flashcards is simple with our
-                                            flashcards maker
-                                            - Just add a front and back. You can even easily make your markdown file
-                                            into
-                                            flashcards. Once your flashcards set is complete, you can study and
-                                            share it
-                                            with
-                                            your friends</p>
+                                        <p class="lead">Productivity feature that stops you from procrastinationg or
+                                            getting distracted.</p>
                                     </div>
                                 </div>
                             </div>
@@ -425,13 +384,10 @@
                                     </div>
                                     <div class="card-body">
                                         <h5 class="card-title">Tomato Timer</h5>
-                                        <p class="card-text">Some quick example text to build on the
-                                            card
-                                            title
-                                            and
-                                            make
-                                            up the bulk of the card's content.</p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                        <p class="card-text">flexible and easy to use. Tomato timer will help you manage
+                                            your time and let you focus on any tasks such as study, working, or writing
+                                        </p>
+                                        <a href="pomodoro" class="btn btn-primary">Tomato Timer</a>
                                     </div>
                                 </div>
                             </div>
@@ -452,14 +408,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <p class="lead">Creating your own set of flashcards is simple with our
-                                            flashcards maker
-                                            - Just add a front and back. You can even easily make your markdown file
-                                            into
-                                            flashcards. Once your flashcards set is complete, you can study and
-                                            share it
-                                            with
-                                            your friends</p>
+                                        <p class="lead">Manage and organize your tasks effectively with our todo list
+                                            feature. Our
+                                            todo list feature will help you get everything done, in the right order</p>
                                     </div>
                                 </div>
                             </div>
@@ -472,14 +423,11 @@
                                         <img class="card-img-top" src="../static/images/todo1.gif" alt="Card image cap">
                                     </div>
                                     <div class="card-body">
-                                        <h5 class="card-title">Tomato Timer</h5>
-                                        <p class="card-text">Some quick example text to build on the
-                                            card
-                                            title
-                                            and
-                                            make
-                                            up the bulk of the card's content.</p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                        <h5 class="card-title">Todo list</h5>
+                                        <p class="card-text">Add your task you have to complete into to do list, update
+                                            your progress. Our todo list sets you up for success by helping you manage,
+                                            prioritize, and complete your goals and taks</p>
+                                        <a href="/todo" class="btn btn-primary">Todo Tracker</a>
                                     </div>
                                 </div>
                             </div>

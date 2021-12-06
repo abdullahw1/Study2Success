@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block swiper %}
-<link rel="stylesheet" href="../static/homepage-style.css" />
-<link rel="stylesheet" href="../static/swiper@7/swiper-bundle.min.css" />
-<script src="../static/swiper@7/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='homepage-style.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='swiper@7/swiper-bundle.min.css')}}" />
+<script src="{{ url_for('static', filename='swiper@7/swiper-bundle.min.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div class="header-container">
@@ -40,7 +40,7 @@
                                 <h1 class="mb-3 logan-top">MAKE <br>YOUR STUDY <br> EXPERIENCE BETTER</h1>
                                 <!-- <p class="logan-top">MAKE <br>YOUR STUDY <br> EXPERIENCE BETTER</h1> -->
                                 <p class="lead mb-4 pl-0">Learning made easy
-                                    <img class="logan-stick" src="../static/images/stick.svg">
+                                    <img class="logan-stick" src="{{ url_for('static', filename='images/stick.svg') }}">
                                 </p>
                                 {% if not current_user.is_authenticated %}
                                 <div class="d-flex flex-column flex-md-row">
@@ -51,7 +51,7 @@
                         </div>
                         <div class="col-12 mx-auto col-md-4 col-lg-7">
                             <div class="header-image">
-                                <img class="logan-img" src="../static/images/headpic.svg">
+                                <img class="logan-img" src="{{ url_for('static', filename='images/headpic.svg') }}">
                             </div>
                         </div>
 
@@ -96,7 +96,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/addcard.gif"
+                                                                                src="{{ url_for('static', filename='images/addcard.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -114,7 +114,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/importcard1.gif"
+                                                                                src="{{ url_for('static', filename='images/importcard1.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -133,7 +133,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/navigatecard.gif"
+                                                                                src="{{ url_for('static', filename='images/navigatecard.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -156,7 +156,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/learncard1.gif"
+                                                                                src="{{ url_for('static', filename='images/learncard1.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -177,7 +177,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/downcard.gif"
+                                                                                src="{{ url_for('static', filename='images/downcard.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -196,7 +196,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/sharecard.gif"
+                                                                                src="{{ url_for('static', filename='images/sharecard.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -302,7 +302,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/importnote.gif"
+                                                                                src="{{ url_for('static', filename='images/importnote.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -319,7 +319,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/navigatenote.gif"
+                                                                                src="{{ url_for('static', filename='images/navigatenote.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -336,7 +336,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/searchnote.gif"
+                                                                                src="{{ url_for('static', filename='images/searchnote.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -357,7 +357,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/sharenote.gif"
+                                                                                src="{{ url_for('static', filename='images/sharenote.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -375,7 +375,7 @@
                                                                     <div class="card" style="width: 100%;">
                                                                         <div class="container image">
                                                                             <img class="card-img-top"
-                                                                                src="../static/images/downnote.gif"
+                                                                                src="{{ url_for('static', filename='images/downnote.gif') }}"
                                                                                 alt="Card image cap">
                                                                         </div>
                                                                         <div class="card-body">
@@ -424,7 +424,7 @@
                                                     <div class="container">
                                                         <div class="card" style="width: 100%;">
                                                             <div class="container image">
-                                                                <img class="card-img-top" src="../static/images/pomodoro.gif"
+                                                                <img class="card-img-top" src="{{ url_for('static', filename='images/pomodoro.gif') }}"
                                                                     alt="Card image cap">
                                                             </div>
                                                             <div class="card-body">
@@ -471,7 +471,7 @@
                                                     <div class="container-fluid">
                                                         <div class="card" style="width: 100%;">
                                                             <div class="container image">
-                                                                <img class="card-img-top" src="../static/images/todo1.gif"
+                                                                <img class="card-img-top" src="{{ url_for('static', filename='images/todo1.gif') }}"
                                                                     alt="Card image cap">
                                                             </div>
                                                             <div class="card-body">

@@ -39,14 +39,20 @@
 
 .notes {
     background-color: #F1E3EE;
+    border-radius: 5%;
+    height: 100vh;
 }
 
 .pomodoro {
     background-color: #D8EBE4;
+    border-radius: 5%;
+    height: 100vh;
 }
 
 .todo-list {
     background-color: #B5EAEA;
+    border-radius: 5%;
+    height: 100vh;
 }
 
 .pl-md-3, .px-md-3 {
@@ -101,6 +107,21 @@ p.lead {
 }
 
 .flashcards {
+    height: 500px;
+    margin-left: -15px;
+}
+
+.notes {
+    height: 500px;
+    margin-left: -15px;
+}
+
+.pomodoro {
+    height: 500px;
+    margin-left: -15px;
+}
+
+.todo-list {
     height: 500px;
     margin-left: -15px;
 }

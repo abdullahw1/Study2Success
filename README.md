@@ -10,6 +10,9 @@
     - [Understanding directory structure](#understanding-directory-structure)
     - [Github flow](#github-flow)
 
+## Access the App
+Our app is currently launched at https://study2success.herokuapp.com !!!
+
 ## Documentations
 For detailed documentations, please refer our hosted docs website [here](https://hoatnnguyen.github.io/Study2Success)
 
@@ -75,3 +78,12 @@ To build an offline site that we can pass around:
 ```
 mkdocs build
 ```
+
+Then, simply copy all contents inside the generated `sites` folder and overwrite everything in the branch `docs`
+The branch `docs` is reserved for launching the documentation site, Github Page will automatically build from that branch.
+
+
+### Building herokuapp
+Helpful documents that I followed for building the heroku app:
+- [GeeksForGeeks-DeployHeroku](https://www.geeksforgeeks.org/deploy-python-flask-app-on-heroku/)
+- [Heroku-PythonSupport](https://devcenter.heroku.com/articles/python-support)

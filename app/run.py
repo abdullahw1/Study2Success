@@ -17,4 +17,5 @@ db.create_all()
 #    threading.Timer(1, launch_browser).start()
 
 # Run flask app server
-myapp_obj.run(debug=DEBUG)
+if __name__ == '__main__':
+    myapp_obj.run(debug=DEBUG)

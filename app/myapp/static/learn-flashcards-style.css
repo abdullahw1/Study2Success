@@ -14,17 +14,3 @@ p, h2 {
 h2 {
     margin-bottom: 30px;
 }
-
-#nextCard {
-    background: none;
-    border: none;
-    color: #007bff;
-}
-
-#nextCard:hover{
-    color:white;
-}
-
-.btn-outline-primary{
-    margin-top:20px;
-}

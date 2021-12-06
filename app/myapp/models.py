@@ -11,13 +11,16 @@ More detailed flask-sqlalchemy documentations can be found [here](https://flask-
 More detailed sqlalchemy documentations can be found [here](https://www.sqlalchemy.org).
 
 """
-
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import url_for
 from flask_login import UserMixin
 
 from myapp import login, db
 
 from myapp.models_enum import FriendStatusEnum
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Friend(db.Model):
     """Database table representing friend status
@@ -42,6 +45,12 @@ class Friend(db.Model):
     status = db.Column(db.Enum(FriendStatusEnum))
 
 
+def _get_default_avatar():
+    default_cat_img = os.path.join(basedir, './static/images/clipart722180.png')
+    assert os.path.exists(default_cat_img), f'"{default_cat_img}" does not exists'
+    with open(default_cat_img, 'rb') as fp:
+        return fp.read()
+
 class User(UserMixin, db.Model):
     """Database table holding main user data, and hold relationships to other tables
 
@@ -50,6 +59,7 @@ class User(UserMixin, db.Model):
         email: String column, hold email of user, this has to be unique
         username: String column, hold username of user, this has to be unique
         password: Hashed password of user
+        avatar: Avatar image blob of user, default will be chosen if not defined
         flashcards: Relationship that points to all flashcards of this user
         friends1: Relationship that points to Friend table's user1
         friends2: Relationship that points to Friend table's user2
@@ -58,6 +68,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128), unique=True)
     username = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(64))
+    avatar = db.Column(db.LargeBinary, default=_get_default_avatar())
     flashcards = db.relationship('FlashCard', backref='user', lazy='dynamic')
     notes = db.relationship('Note', backref='user', lazy='dynamic')
     friends1 = db.relationship('Friend', backref='user1' , lazy='dynamic', foreign_keys=[Friend.user1_id])
@@ -68,7 +79,7 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
-    
+
     def __repr__(self):
         return f'<User {self.id}: {self.username}, {self.password}>'
 

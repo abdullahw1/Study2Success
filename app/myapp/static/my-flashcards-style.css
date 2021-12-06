@@ -2,11 +2,6 @@
     height:35vh;
 }
 
-#swiper-container{
-    margin-left:30%;
-    margin-right:30%;
-}
-
 .swiper-slide{
     background:#FFE5D9;
     display:flex;

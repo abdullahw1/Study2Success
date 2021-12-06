@@ -29,6 +29,7 @@ import random
 import pathlib
 from datetime import datetime
 import markdown
+from base64 import b64encode
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort, send_file
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
@@ -41,6 +42,14 @@ from myapp.forms import SignupForm, LoginForm, FlashCardForm, UploadMarkdownForm
 from myapp.models import User, FlashCard, Friend, FriendStatusEnum, Todo, SharedFlashCard, Note, SharedNote
 from myapp.models_methods import get_friend_status, get_all_friends
 from myapp.mdparser import md2flashcard
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+@myapp_obj.context_processor
+def jinja_encode_to_b64():
+    def encode_to_b64(blob):
+        return b64encode(blob).decode("utf-8")
+    return dict(encode_to_b64=encode_to_b64)
 
 
 @myapp_obj.route("/")
@@ -76,11 +85,11 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            flash(f'Login requested for user {form.username.data},remember_me={form.remember_me.data}')
+            flash(f'Logged in as User "{form.username.data}", remember_me={form.remember_me.data}')
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for("log"))
         else:
-            flash("Login invalid username or password!")
+            flash("Login invalid username or password!", "error")
             return redirect('/login')
     return render_template("login.html", form=form)
 
@@ -100,6 +109,39 @@ def logout():
     return redirect(url_for("home"))
 
 
+AVATAR_IMGS = {
+    1: 'images/clipart722174.png',
+    2: 'images/clipart722180.png',
+    3: 'images/clipart1236782.png',
+    4: 'images/clipart1236792.png',
+    5: 'images/clipart1237041.png',
+    6: 'images/clipart1237090.png',
+}
+
+@myapp_obj.route("/account")
+@login_required
+def account():
+    """User's account page, redirect if need to change avatar"""
+
+    return render_template("/account.html", avatars=AVATAR_IMGS)
+
+
+@myapp_obj.route("/change_avatar/<int:avatar_id>")
+@login_required
+def change_avatar(avatar_id):
+    """To switch avatar pictures and more, then redirect back to account"""
+    if avatar_id in AVATAR_IMGS:
+        avatar_path = os.path.join(basedir, f'./static/{AVATAR_IMGS[avatar_id]}')
+        if os.path.exists(avatar_path):
+            user = current_user._get_current_object()
+            with open(avatar_path, 'rb') as fp:
+                user.avatar = fp.read() # Modify avatar blob
+                db.session.commit()
+        else:
+            raise Exception(f"Avatar {avatar_path} doesn't exists")
+    return redirect(url_for("account"))
+
+
 @myapp_obj.route("/add-flashcard", methods=['GET', 'POST'])
 @login_required
 def add_flashcard():
@@ -109,7 +151,7 @@ def add_flashcard():
         card = FlashCard(front=form.front.data, back=form.back.data, view=0, learned=0, user=current_user._get_current_object())
         db.session.add(card)
         db.session.commit()
-        flash("Flashcard has been created")
+        flash("Flashcard has been created", "success")
         return redirect(url_for("add_flashcard"))
     return render_template("/add-flashcard.html", form=form)
 
@@ -120,7 +162,7 @@ def show_flashcard():
     """My Flashcard route, to show all flashcard of current user by order based on how often user got answer correct"""
     ordered_cards = FlashCard.query.filter_by(user_id=current_user.get_id()).order_by(FlashCard.learned).all()
     if not ordered_cards:
-        flash("You don't have any flashcards. Please create one")
+        flash("You don't have any flashcards. Please create one", "warning")
         return redirect(url_for("add_flashcard"))
     return render_template("my-flashcards.html", ordered_cards=ordered_cards)
 
@@ -166,7 +208,7 @@ def learn_flashcard():
     cards = FlashCard.query.filter_by(user_id=current_user.get_id()).all() # list of cards that the current user has
 
     if len(cards) < 4:
-        flash("You must have at least 4 flashcards. Please create more flashcards")
+        flash("You must have at least 4 flashcards. Please create more flashcards", "warning")
         return redirect(url_for("add_flashcard"))
     
     form = ObjectiveForm()
@@ -174,38 +216,40 @@ def learn_flashcard():
     list_id = _shuffle_choices(first_card, cards)
     choice = [FlashCard.query.get(x) for x in list_id]
 
+    correct_choice = None
     if form.validate_on_submit():
         if form.A.data:
             if form.A.raw_data[0] == first_card.back:
-                flash('Excellent')
-                first_card.learned += 1
-                db.session.commit()
+                correct_choice = True
             else:
-                flash('opps. Wrong answer')
+                correct_choice = False
         elif form.B.data:
             if form.B.raw_data[0] == first_card.back:
-                first_card.learned += 1
-                db.session.commit()
-                flash('Excellent')
+                correct_choice = True
             else:
-                flash('opps. Wrong answer')
+                correct_choice = False
         elif form.C.data:
             if form.C.raw_data[0] == first_card.back:
-                flash('Excellent')
-                first_card.learned += 1
-                db.session.commit()
+                correct_choice = True
             else:
-                flash('opps. Wrong answer')
+                correct_choice = False
         elif form.D.data:
             if form.D.raw_data[0] == first_card.back:
-                flash('Excellent')
+                correct_choice = True
+            else:
+                correct_choice = False
+        # If form submitted
+        if correct_choice is not None:
+            # If correct choice
+            if correct_choice:
+                flash('Excellent', "success")
+                correct_choice = first_card.back # Pass this to html template so it will render this as card instead of ABCD options
                 first_card.learned += 1
                 db.session.commit()
             else:
-                flash('opps. Wrong answer')
+                flash('opps. Wrong answer', "error")
     else:
         if formNext.validate_on_submit():
-            flash("hello")
             first_card.view += 1
             db.session.commit()
             return redirect(url_for("learn_flashcard"))
@@ -214,7 +258,7 @@ def learn_flashcard():
     form.B.label.text = choice[1].back
     form.C.label.text = choice[2].back
     form.D.label.text = choice[3].back
-    return render_template("learn-flashcard.html", first_card=first_card, form=form, formNext=formNext, choice=choice, list_id=list_id)
+    return render_template("learn-flashcard.html", first_card=first_card, form=form, formNext=formNext, choice=choice, list_id=list_id, correct_choice=correct_choice)
 
 
 @myapp_obj.route("/download-flashcard-as-pdf", methods=['GET', 'POST'])
@@ -331,13 +375,15 @@ def show_friends():
     friends = []
     for status, oth_user in get_all_friends(current_user.get_id()):
         if status == 'friend':
-            buttons = [(f'/remove-friend/{oth_user.id}', 'Remove Friend')]
+            buttons = [(f'/remove-friend/{oth_user.id}', 'Remove Friend', 'btn-outline-danger')] #Tuple in the format (link, text, button_type)
             print_status = 'Friend'
         elif status == 'pending-sent-request':
-            buttons = [(f'/remove-friend/{oth_user.id}', 'Unsend')]
+            buttons = [(f'/remove-friend/{oth_user.id}', 'Unsend', 'btn-outline-warning')]
             print_status = 'Sent'
         elif status == 'pending-to-approve':
-            buttons = [(f'/add-friend/{oth_user.id}', 'Approve'), (f'/remove-friend/{oth_user.id}', 'Reject')]
+            buttons = [(f'/add-friend/{oth_user.id}', 'Approve', 'btn-outline-success'),
+                        (f'/remove-friend/{oth_user.id}', 'Reject', 'btn-outline-danger')
+                    ]
             print_status = 'Pending'
         else:
             abort(404, f'Unknown status {status}')
@@ -351,13 +397,15 @@ def show_friends():
         for user in result:
             status, _ = get_friend_status(current_user.get_id(), user.id)
             if status == 'friend':
-                buttons = [(f'/remove-friend/{user.id}', 'Remove Friend')]
+                buttons = [(f'/remove-friend/{user.id}', 'Remove Friend', 'btn-outline-danger')]
             elif status == 'pending-sent-request':
-                buttons = [(f'/remove-friend/{user.id}', 'Unsend')]
+                buttons = [(f'/remove-friend/{user.id}', 'Unsend', 'btn-outline-warning')]
             elif status == 'pending-to-approve':
-                buttons = [(f'/add-friend/{user.id}', 'Approve'), (f'/remove-friend/{user.id}', 'Reject')]
+                buttons = [(f'/add-friend/{user.id}', 'Approve', 'btn-outline-success'),
+                            (f'/remove-friend/{user.id}', 'Reject', 'btn-outline-danger')
+                        ]
             elif status == 'neutral':
-                buttons = [(f'/add-friend/{user.id}', 'Add Friend')]
+                buttons = [(f'/add-friend/{user.id}', 'Add Friend', 'btn-outline-info')]
             else:
                 abort(404, description=f'Unknown status {status}')
             found_users.append((user.username, buttons))
@@ -377,7 +425,7 @@ def add_friend_userid_provided(user_id):
         pass
     elif status == 'pending-sent-request':
         # Current user sent a request, do nothing
-        flash(f'Friend request already sent to "{friend_record.user2.username}"')
+        flash(f'Friend request already sent to "{friend_record.user2.username}"', "warning")
     elif status == 'pending-to-approve':
         # Other user sent the request, approve (Change status from pending to approved)
         friend_record.status = FriendStatusEnum.FRIEND
@@ -515,7 +563,7 @@ def view_notes(note_id):
         if notes:
             flash(f'{len(notes)} search results found')
         else:
-            flash('No search results found')
+            flash('No search results found', "error")
     else:
         notes = Note.query.filter_by(user_id=current_user.get_id()).all()
         if note_id != 0:
@@ -560,14 +608,6 @@ def upload_note():
         return redirect(url_for("show_notes"))
     return render_template("import-note.html", form=form)
 
-# @myapp_obj.route("/notes-sharing", methods=['GET', 'POST'])
-# @login_required
-# def notes_sharing():
-#     """(not functional) A route for viewing sharing status of Notes (both shared to others and others shared to me)"""
-#     owner_notes = ShareNote.query.filter_by(owner_user_id=current_user.get_id()).all()
-#     target_notes = ShareNote.query.filter_by(target_user_id=current_user.get_id()).all()
-#     return render_template("notes-sharing.html")
-
 
 @myapp_obj.route("/share-notes/<int:note_id>", methods=['GET', 'POST'])
 @login_required
@@ -586,7 +626,7 @@ def share_note(note_id):
         shared_note = SharedNote(note_id=note_id, datetime=now, owner_user_id=current_user.get_id(), target_user_id=user.id)
         db.session.add(shared_note)
         db.session.commit()
-        flash(f'Shared note(#{id}) to "{user.username}" on {str(datetime.now())}')
+        flash(f'Shared note "{shared_note.note.name}" to "{user.username}" on {str(datetime.now())}')
         return redirect(url_for("show_notes"))
     return render_template("share-notes.html", note=note, form=form)
 

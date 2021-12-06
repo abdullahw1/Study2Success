@@ -18,8 +18,8 @@
                 <td>{{ friend.username }}</td>
                 <td>{{ status }}</td>
                 <td>
-                    {% for href, tag_descrp in buttons %}
-                    <a class="btn btn-outline-primary" href="{{ href }}">{{ tag_descrp }}</a>
+                    {% for href, tag_descrp, button_style in buttons %}
+                    <a class="btn {{button_style}}" href="{{ href }}">{{ tag_descrp }}</a>
                     {% endfor %}
                 </td>
             </tr>
@@ -29,7 +29,6 @@
 </p>
 <hr>
 <h2>Add Friend</h2>
-{% from 'bootstrap/form.html' import render_form %}
 {{ render_form(search_form, form_type="inline", novalidate=True) }}
 <p>
     <table class="table">
@@ -44,8 +43,8 @@
             <tr>
                 <td>{{ username }}</td>
                 <td>
-                    {% for href, tag_descrp in buttons %}
-                    <a class="btn btn-outline-primary" href="{{ href }}">{{ tag_descrp }}</a>
+                    {% for href, tag_descrp, button_style in buttons %}
+                    <a class="btn {{button_style}}" href="{{ href }}">{{ tag_descrp }}</a>
                     {% endfor %}
                 </td>
             </tr>
